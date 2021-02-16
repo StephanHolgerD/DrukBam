@@ -10,7 +10,7 @@ class PlotMapping():
         self.chrom=chrom
         self.start=start-1
         self.end=end
-        self.maxHeight=100
+        self.maxHeight=200
         self.Fontsize=3
         
     
@@ -29,10 +29,16 @@ class PlotMapping():
                             df.at[0,_]=1
                         if record.is_reverse:
                             plotList.append((0,record.reference_start,record.reference_end,'r',
-                                             record.qname+'_R',record.query_alignment_sequence,record.cigarstring))
+                                             record.qname+'_R',
+                                             record.query_alignment_sequence,
+                                             record.cigarstring,
+                                             record.mate_is_unmapped))
                         else:
                             plotList.append((0,record.reference_start,record.reference_end,'f',
-                                             record.qname+'_F',record.query_alignment_sequence,record.cigarstring))
+                                             record.qname+'_F',
+                                             record.query_alignment_sequence,
+                                             record.cigarstring,
+                                             record.mate_is_unmapped))
                             
                     
                     else:
@@ -42,17 +48,23 @@ class PlotMapping():
                                     df.at[p,_]=1
                                 if record.is_reverse:
                                     plotList.append((p,record.reference_start,record.reference_end,'r',
-                                                     record.qname+'_R',record.query_alignment_sequence,record.cigarstring))
+                                                     record.qname+'_R',
+                                                     record.query_alignment_sequence,
+                                                     record.cigarstring,
+                                                     record.mate_is_unmapped))
                                 else:
                                     plotList.append((p,record.reference_start,record.reference_end,'f',
-                                                     record.qname+'_F',record.query_alignment_sequence,record.cigarstring))
+                                                     record.qname+'_F',
+                                                     record.query_alignment_sequence,
+                                                     record.cigarstring,
+                                                     record.mate_is_unmapped))
                                 break
         return plotList
     
     def PlotreadsDF(self,lbefore,l,end_prevChunk):
-        before=pd.DataFrame(lbefore,columns=['y','start','end','direction','name','qSeq','cigar'])
+        before=pd.DataFrame(lbefore,columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
         before=before[before['end']>end_prevChunk]
-        recent=pd.DataFrame(l,columns=['y','start','end','direction','name','qSeq','cigar'])
+        recent=pd.DataFrame(l,columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
         for overlappRead in set(before['name']).intersection(set(recent['name'])):
             ybefore=before[before['name']==overlappRead]['y'].values[0]
             beforeReads=before[before['y']==ybefore]['name']
@@ -104,13 +116,13 @@ class PlotMapping():
                 ax.plot((s,e),(y,y),color='black')
                 ax.plot((s+1,e-1),(y,y),linewidth=0.1,color='white')
                 
-        ax.set(xlim=(start,end),ylim=(0,100))
+        ax.set(xlim=(start,end),ylim=(0,self.maxHeight))
         ax.get_yaxis().set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(False)
     
     def plotEmptyChunk(self,ax,start,end):
-        ax.set(xlim=(start,end),ylim=(0,100))
+        ax.set(xlim=(start,end),ylim=(0,self.maxHeight))
         ax.get_yaxis().set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(False)
@@ -131,10 +143,10 @@ class PlotMapping():
     
     def PlotNucChunk(self,df,ax,start,end):
         colorDict={'A':'red','C':'blue','T':'green','G':'yellow','-':'black','N':'pink'}
-        for y,s,e,d,qS,cig in zip(df['y'],df['start'],df['end'],df['direction'],df['qSeq'],df['cigar']):
+        for y,s,e,d,qS,cig,mate in zip(df['y'],df['start'],df['end'],df['direction'],df['qSeq'],df['cigar'],df['mateMap']):
             e=e
             s=s+1
-            if y>100:
+            if y>self.maxHeight:
                 continue
             chunk_cigarstring=self.CigChunker(cig)
             query_alignment_sequence=qS
@@ -143,10 +155,15 @@ class PlotMapping():
                     qs1=query_alignment_sequence[:p]
                     qs2=query_alignment_sequence[p:]
                     query_alignment_sequence=qs1+'-'+qs2
-                    
-                    
+            
+            chunkL=len(chunk_cigarstring)
+            chunk_cigarstringS=[x for x in chunk_cigarstring if x =='S']
             chunk_cigarstring=[x for x in chunk_cigarstring if x !='S']
+            softClipp=len(chunk_cigarstringS)/chunkL
+            alpha=1
             for p,alignPos in enumerate(chunk_cigarstring):
+                if softClipp>=0.1 or mate:
+                    alpha=0.3
                 x=s+p
                 if x>self.end:
                     continue
@@ -156,8 +173,8 @@ class PlotMapping():
                     continue
                 if alignPos=='M':
                     ax.text(x,y,query_alignment_sequence[p],fontsize=self.Fontsize, 
-                            color='black',family='monospace',ha='center',va='center',
-                            bbox=dict(boxstyle='square,pad=0', fc=colorDict[query_alignment_sequence[p]], ec='none'))
+                            color='black',alpha=alpha,family='monospace',ha='center',va='center',
+                            bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=colorDict[query_alignment_sequence[p]], ec='none'))
                     continue
                 if alignPos=='I':
                     ax.plot((x-1,x-1),(y-0.5,y+0.5),linewidth=0.5)
@@ -192,21 +209,23 @@ class PlotMapping():
             
             
             if len(results)==1:
-                d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar'])
+                d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                 self.plotChunk(d,self.ax,chunk[1][1],chunk[1][2])
                 self.PlotNucChunk(d,self.ax,chunk[1][1],chunk[1][2])
                 continue
                 
             if p==0:
-                d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar'])
+                d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                 self.plotChunk(d,self.ax[p],chunk[1][1],chunk[1][2])
             else:
                 if results[p-1]==[]:
-                    d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar'])
+                    d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                     self.plotChunk(d,self.ax[p],chunk[1][1],chunk[1][2])
                 else:
                     d=self.PlotreadsDF(results[p-1],results[p],multi[p-1][2])
                     self.plotChunk(d,self.ax[p],chunk[1][1],chunk[1][2])
-        plt.savefig('{}_{}_{}.pdf'.format(self.chrom,str(self.start),str(self.end)))
+        i=self.mapping.split('/')[-1].split('Aligned')[0]
+        plt.savefig('{}_{}_{}_{}.pdf'.format(i,self.chrom,str(self.start),str(self.end)))
+        plt.close()
                     
 

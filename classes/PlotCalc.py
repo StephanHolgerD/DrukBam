@@ -50,12 +50,15 @@ class CalcPlot():
         self.ax=ax
         self.fig=fig
         plt.subplots_adjust(wspace=0,hspace=0)
+        plt.style.use('bmh')
 
 
-    def plotChunk(self,df,ax,start,end):
+    def plotChunk(self,df,ax,start,end,direction=None):
         for y,s,e,d in zip(df['y'],df['start'],df['end'],df['direction']):
             e=e
             s=s+1
+            if direction and y>(self.maxHeight/2):
+                continue
             if d=='r':
                 ax.plot((s,e),(y,y),color='grey')
                 ax.plot((s+1,e-1),(y,y),linewidth=0.1,color='white')

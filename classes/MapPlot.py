@@ -12,15 +12,19 @@ class PlotMapping():
         self.chrom=chrom
         self.start=start-1
         self.end=end
-        self.maxHeight=coverage
         self.Fontsize=3
         self.threads=threads
         self.flag=flag
         self.chunksize=chunksize
+
+        self.direction=direction
+        if direction:
+            self.maxHeight=coverage/2
+        else:
+            self.maxHeight=coverage
+        self.schematic=schematic
         self.CalcMapping=CalcMapping(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads)
         self.CalcPlot=CalcPlot(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads)
-        self.direction=direction
-        self.schematic=schematic
 
     def CalcFRWD(self):
         span=self.end-self.start

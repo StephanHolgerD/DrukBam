@@ -35,21 +35,21 @@ class CalcPlot():
             if cols==1:
                 if self.end-self.start <=100:
                     x=0.07*(self.end-self.start)
-                    y=0.12*self.maxHeight
+                    y=0.12*self.maxHeight*2
                     fig,ax=plt.subplots(2,cols,figsize=(x,y))
                     self.Fontsize=6
                 else:
                     x=0.035*(self.end-self.start)
-                    y=0.06*self.maxHeight
+                    y=0.06*self.maxHeight*2
                     fig,ax=plt.subplots(2,cols,figsize=(x,y))
             if cols >1:
                 x=0.035*5000
-                y=0.06*self.maxHeight
+                y=0.06*self.maxHeight*2
                 fig,ax=plt.subplots(2,cols,figsize=(x*cols,6))
 
         self.ax=ax
         self.fig=fig
-        plt.subplots_adjust(wspace=0,hspace=0)
+        plt.subplots_adjust(wspace=0,hspace=0.01)
         plt.style.use('bmh')
 
 
@@ -67,14 +67,14 @@ class CalcPlot():
                 ax.plot((s,e),(y,y),color='black')
                 ax.plot((s+1,e-1),(y,y),linewidth=0.1,color='white')
 
-        ax.set(xlim=(start,end),ylim=(0,self.maxHeight))
+        ax.set(xlim=(start,end),ylim=(0,self.maxHeight+2))
         ax.get_yaxis().set_visible(False)
 
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(False)
 
     def plotEmptyChunk(self,ax,start,end):
-        ax.set(xlim=(start,end),ylim=(0,self.maxHeight))
+        ax.set(xlim=(start,end),ylim=(0,self.maxHeight+2))
         ax.get_yaxis().set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(False)
@@ -99,6 +99,7 @@ class CalcPlot():
             e=e
             s=s+1
             if y>self.maxHeight:
+                ax.plot((s,e),(self.maxHeight+1,self.maxHeight+1),color='red',alpha=0.1)
                 continue
             chunk_cigarstring=self.CigChunker(cig)
             query_alignment_sequence=qS

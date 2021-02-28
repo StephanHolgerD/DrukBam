@@ -160,20 +160,17 @@ class PlotMapping():
             if resultsR[p]==[] and len(resultsR)==1:
                 self.CalcPlot.plotEmptyChunk(self.CalcPlot.ax[0,p],chunk[1][1],chunk[1][2])
                 self.CalcPlot.ax[0,p].get_xaxis().set_visible(False)
+                self.CalcPlot.ax[0,p].spines['bottom'].set_visible(False)
+
                 continue
-
-            if resultsR[p]==[]:
-                self.CalcPlot.plotEmptyChunk(self.CalcPlot.ax[0,p],chunk[1][1],chunk[1][2])
-                self.CalcPlot.ax[0,p].get_xaxis().set_visible(False)
-                continue
-
-
 
             if len(resultsR)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                 self.CalcPlot.plotChunk(d,self.CalcPlot.ax[0],chunk[1][1],chunk[1][2])
                 self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax[0],chunk[1][1],chunk[1][2],flag=self.flag)
                 self.CalcPlot.ax[0].get_xaxis().set_visible(False)
+                self.CalcPlot.ax[0].spines['bottom'].set_visible(False)
+
                 continue
 
 
@@ -183,12 +180,9 @@ class PlotMapping():
                 self.CalcPlot.plotEmptyChunk(self.CalcPlot.ax[1,0],chunk[1][1],chunk[1][2])
                 continue
 
-            if resultsF[p]==[]:
-                self.CalcPlot.plotEmptyChunk(self.CalcPlot.ax[1,p],chunk[1][1],chunk[1][2])
-
-
             if len(resultsF)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
+                self.CalcPlot.ax[1].spines['bottom'].set_visible(False)
                 self.CalcPlot.plotChunk(d,self.CalcPlot.ax[1],chunk[1][1],chunk[1][2])
                 self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax[1],chunk[1][1],chunk[1][2],flag=self.flag)
                 continue

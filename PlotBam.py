@@ -25,5 +25,6 @@ if len(sys.argv)==1:
     sys.exit(1)
 
 args=parser.parse_args()
-ploter=PlotMapping(args.bam,args.chromosome,int(args.start),int(args.end),flag=args.flag,schematic=args.schematic,direction=args.direction)
+ploter=PlotMapping(args.bam,args.chromosome,int(args.start),int(args.end),flag=args.flag,schematic=args.schematic,direction=args.direction,coverage=300)
 ploter.PlotNucDir()
+#ploter.Plot()

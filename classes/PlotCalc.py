@@ -5,7 +5,7 @@ from tqdm import tqdm
 from multiprocessing import Pool
 
 class CalcPlot():
-    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None'):
+    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000):
         self.mapping=mapping
         self.chrom=chrom
         self.start=start-1
@@ -14,9 +14,10 @@ class CalcPlot():
         self.Fontsize=3
         self.threads=threads
         self.flag=flag
+        self.chunksize=chunksize
 
-    def startPlot(self,cols,direction):
-        if not direction:
+    def startPlot(self,cols,direction,schematic):
+        if not direction and not schematic:
             if cols==1:
                 if self.end-self.start <=100:
                     x=0.07*(self.end-self.start)
@@ -31,7 +32,7 @@ class CalcPlot():
                 x=0.035*5000
                 y=0.06*self.maxHeight
                 fig,ax=plt.subplots(1,cols,figsize=(x*cols,6))
-        else:
+        if direction and not schematic:
             if cols==1:
                 if self.end-self.start <=100:
                     x=0.07*(self.end-self.start)
@@ -46,6 +47,15 @@ class CalcPlot():
                 x=0.035*5000
                 y=0.06*self.maxHeight*2
                 fig,ax=plt.subplots(2,cols,figsize=(x*cols,6))
+
+        if not direction and schematic:
+                x=12
+                y=0.12*self.maxHeight
+                fig,ax=plt.subplots(1,cols,figsize=(x,y))
+        if  direction and schematic:
+                x=12
+                y=0.12*self.maxHeight*2
+                fig,ax=plt.subplots(2,cols,figsize=(x,y))
 
         self.ax=ax
         self.fig=fig
@@ -67,14 +77,14 @@ class CalcPlot():
                 ax.plot((s,e),(y,y),color='black')
                 ax.plot((s+1,e-1),(y,y),linewidth=0.1,color='white')
 
-        ax.set(xlim=(start,end),ylim=(0,self.maxHeight+2))
-        ax.get_yaxis().set_visible(False)
 
-        ax.spines['right'].set_visible(False)
-        ax.spines['left'].set_visible(False)
 
-    def plotEmptyChunk(self,ax,start,end):
-        ax.set(xlim=(start,end),ylim=(0,self.maxHeight+2))
+    def AxSet(self,ax,start,end,chunk=False):
+        if not chunk:
+            ax.set(xlim=(start,end),ylim=(0,self.maxHeight+2))
+        else:
+            ax.set(xlim=(start,start+self.chunksize),ylim=(0,self.maxHeight+2))
+
         ax.get_yaxis().set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(False)

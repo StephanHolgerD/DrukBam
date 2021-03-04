@@ -11,7 +11,7 @@ requiredNamed.add_argument('-e', '--end',help='end of the region of interest', r
 
 
 optArguments = parser.add_argument_group('optional arguments')
-optArguments.add_argument('--threads',default=1, help="number of cpu's  to run in paralell, ROI <1000 will always use 1 core")
+optArguments.add_argument('--threads',default=1, help="number of cpu's  to run in paralell, ROI <1000 will always use 1 core",type=int)
 optArguments.add_argument('--maxcoverage',default=200, help="max cov to plot",type=int)
 
 optArguments.add_argument('--direction',default=False,action='store_true', help="split reads by forward and reverse")
@@ -27,6 +27,6 @@ if len(sys.argv)==1:
     sys.exit(1)
 
 args=parser.parse_args()
-ploter=PlotMapping(args.bam,args.chromosome,int(args.start),int(args.end),flag=args.flag,schematic=args.schematic,direction=args.direction,coverage=args.maxcoverage)
+ploter=PlotMapping(args.bam,args.chromosome,int(args.start),int(args.end),flag=args.flag,schematic=args.schematic,direction=args.direction,coverage=args.maxcoverage,threads=args.threads)
 ploter.Plot()
 #ploter.Plot()

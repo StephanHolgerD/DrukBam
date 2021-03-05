@@ -18,6 +18,7 @@ optArguments.add_argument('--direction',default=False,action='store_true', help=
 optArguments.add_argument('--schematic',default=False,action='store_true', help='plot no nucleotide, recommended for ROI>1000')
 optArguments.add_argument('--style',default='classic', help='different style options for the plot, def:classic',choices=['classic','fancy'])
 optArguments.add_argument('--flag',default='None', help='different style options for the plot, def:classic',choices=['None','MateUnmapped','SoftClipped','MateUnmappedSoftClipped','Insertion'])
+optArguments.add_argument('--fasta',default='None', help='fasta file for reference related plotting')
 
 
 
@@ -27,6 +28,7 @@ if len(sys.argv)==1:
     sys.exit(1)
 
 args=parser.parse_args()
-ploter=PlotMapping(args.bam,args.chromosome,int(args.start),int(args.end),flag=args.flag,schematic=args.schematic,direction=args.direction,coverage=args.maxcoverage,threads=args.threads)
+ploter=PlotMapping(args.bam,args.chromosome,
+int(args.start),int(args.end),flag=args.flag,schematic=args.schematic,direction=args.direction,coverage=args.maxcoverage,threads=args.threads)
 ploter.Plot()
 #ploter.Plot()

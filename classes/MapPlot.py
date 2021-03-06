@@ -7,10 +7,10 @@ from classes.bamCalc import CalcMapping
 from classes.PlotCalc import CalcPlot
 import sys
 class PlotMapping():
-    def __init__(self,mapping,chrom,start,end,coverage=200,flag='None',direction=False,schematic=False,chunksize=1000,threads=1):
+    def __init__(self,mapping,chrom,start,end,coverage=200,flag='None',direction=False,schematic=False,chunksize=1000,threads=1,fasta=None):
         self.mapping=mapping
         self.chrom=chrom
-        self.start=start-1
+        self.start=start
         self.end=end
         self.Fontsize=3
         self.threads=threads
@@ -23,9 +23,9 @@ class PlotMapping():
             self.maxHeight=coverage
         self.schematic=schematic
         self.threads=threads
+        self.fasta=fasta
         self.CalcMapping=CalcMapping(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads)
-        self.CalcPlot=CalcPlot(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads)
-
+        self.CalcPlot=CalcPlot(mapping,chrom,self.start,self.end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,fasta=self.fasta)
     def Plot(self):
         if self.schematic and not self.direction:
             self.PlotSchmematic()
@@ -223,7 +223,7 @@ class PlotMapping():
                 self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax[1],chunk[1][1],chunk[1][2],flag=self.flag)
                 continue
 
-
+        self.CalcPlot.PlotFasta(self.CalcPlot.ax[0])
         i=self.mapping.split('/')[-1].split('Aligned')[0]
         plt.savefig('{}_{}_{}_{}.pdf'.format(i,self.chrom,str(self.start),str(self.end)),bbox_inches='tight')
         plt.close()

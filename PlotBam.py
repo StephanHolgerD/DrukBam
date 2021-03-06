@@ -29,6 +29,12 @@ if len(sys.argv)==1:
 
 args=parser.parse_args()
 ploter=PlotMapping(args.bam,args.chromosome,
-int(args.start),int(args.end),flag=args.flag,schematic=args.schematic,direction=args.direction,coverage=args.maxcoverage,threads=args.threads)
+int(args.start),
+int(args.end),
+flag=args.flag,
+schematic=args.schematic,
+direction=args.direction,
+coverage=args.maxcoverage,threads=args.threads,
+fasta=args.fasta)
 ploter.Plot()
-#ploter.Plot()
+#ploter.Plot(,)

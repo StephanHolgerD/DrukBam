@@ -5,17 +5,17 @@ from tqdm import tqdm
 from multiprocessing import Pool
 
 class CalcPlot():
-    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000):
+    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000, fasta=None):
         self.mapping=mapping
         self.chrom=chrom
-        self.start=start-1
+        self.start=start
         self.end=end
         self.maxHeight=coverage
         self.Fontsize=3
         self.threads=threads
         self.flag=flag
         self.chunksize=chunksize
-
+        self.fasta = fasta
     def startPlot(self,cols,direction,schematic):
 
         self.cols=cols
@@ -142,12 +142,21 @@ class CalcPlot():
         return cigL
 
 
+
+    def PlotFasta(self,ax):
+        colorDict={'A':'red','C':'blue','T':'green','G':'yellow','-':'black','N':'pink'}
+        with pysam.FastaFile(self.fasta) as fa:
+            for _,n in enumerate(fa.fetch(self.chrom,self.start,self.end+1)):
+                ax.text(self.start+_,0,n,fontsize=self.Fontsize,
+                        color=colorDict[n],alpha=1,family='monospace',ha='center',va='center',
+                        bbox=dict(alpha=1,boxstyle='square,pad=0', fc='black', ec='none'))
+
     def PlotNucChunk(self,df,ax,start,end,flag='None'):
         df['y']=df['y']+1
         colorDict={'A':'red','C':'blue','T':'green','G':'yellow','-':'black','N':'pink'}
         for y,s,e,d,qS,cig,mate in zip(df['y'],df['start'],df['end'],df['direction'],df['qSeq'],df['cigar'],df['mateMap']):
             e=e
-            s=s+1
+            s=s
             if y>self.maxHeight:
                 ax.plot((s,e),(self.maxHeight+1,self.maxHeight+1),color='red',alpha=0.1)
                 continue

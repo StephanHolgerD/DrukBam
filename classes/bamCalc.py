@@ -99,6 +99,7 @@ class CalcMapping():
                                                      record.cigarstring,
                                                      record.mate_is_unmapped))
                                 break
+        df.to_csv('test.tsv',sep='\t')                        
         return plotList
 
     def plotListFRWRD(self,chrom,start,end):

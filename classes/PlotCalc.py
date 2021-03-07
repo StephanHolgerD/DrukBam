@@ -88,7 +88,7 @@ class CalcPlot():
 
         for y,s,e,d in zip(df['y'],df['start'],df['end'],df['direction']):
             e=e
-            s=s+1
+            s=s
             if y>(self.maxHeight):
                 ax.plot((s,e),(self.maxHeight+1,self.maxHeight+1),color='red',alpha=0.1)
                 continue
@@ -146,7 +146,7 @@ class CalcPlot():
     def PlotFasta(self,ax):
         colorDict={'A':'red','C':'blue','T':'green','G':'yellow','-':'black','N':'pink'}
         with pysam.FastaFile(self.fasta) as fa:
-            for _,n in enumerate(fa.fetch(self.chrom,self.start,self.end+1)):
+            for _,n in enumerate(fa.fetch(self.chrom,self.start,self.end)):
                 ax.text(self.start+_,0,n,fontsize=self.Fontsize,
                         color=colorDict[n],alpha=1,family='monospace',ha='center',va='center',
                         bbox=dict(alpha=1,boxstyle='square,pad=0', fc='black', ec='none'))

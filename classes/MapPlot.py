@@ -202,6 +202,7 @@ class PlotMapping():
 
             if len(resultsR)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
+                d.to_csv('test2.tsv',sep='\t')
                 self.CalcPlot.AxSet(self.CalcPlot.ax[0],chunk[1][1],chunk[1][2], direction=direction)
                 self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax[0],chunk[1][1],chunk[1][2],flag=self.flag)
                 self.CalcPlot.ax[0].get_xaxis().set_visible(False)

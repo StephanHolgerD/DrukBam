@@ -68,6 +68,8 @@ class PlotMapping():
             end=end+self.chunksize
         if span/self.chunksize - int(span/self.chunksize)!=0:
             multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
+        print(multi)
+
         with Pool(processes=self.threads) as pool:
             results = pool.starmap(self.CalcMapping.plotListRVRS, multi)
         return results,multi
@@ -225,6 +227,8 @@ class PlotMapping():
                 continue
 
         self.CalcPlot.PlotFasta(self.CalcPlot.ax[0])
+        self.CalcPlot.PlotFasta(self.CalcPlot.ax[1])
+
         i=self.mapping.split('/')[-1].split('Aligned')[0]
         plt.savefig('{}_{}_{}_{}.pdf'.format(i,self.chrom,str(self.start),str(self.end)),bbox_inches='tight')
         plt.close()

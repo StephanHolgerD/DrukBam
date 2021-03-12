@@ -74,11 +74,17 @@ class CalcMapping():
         with pysam.AlignmentFile(self.mapping) as s:
             for record in tqdm(s.fetch(str(chrom),start,end,until_eof=True)):
                 if not record.is_unmapped and record.is_reverse:
-                    for _ in range(record.reference_start,record.reference_end+1):
+                    #print('s')
+                    #print(record.reference_start)
+                    #record.reference_start=record.reference_start+1
+                    #record.reference_end=record.reference_end+1
+                    #print(record.reference_start)
+                    #print('e')
+                    for _ in range(record.reference_start,record.reference_end):
                         if _ not in list(df):
                             df[_]=0
-                    if sum(df[range(record.reference_start,record.reference_end+1)].sum(axis=1)) == 0:
-                        for _ in range(record.reference_start,record.reference_end+1):
+                    if sum(df[range(record.reference_start,record.reference_end)].sum(axis=1)) == 0:
+                        for _ in range(record.reference_start,record.reference_end):
                             df.at[0,_]=1
 
                         plotList.append((0,record.reference_start,record.reference_end,'r',
@@ -89,9 +95,9 @@ class CalcMapping():
 
 
                     else:
-                        for p,v in enumerate(list(df[range(record.reference_start,record.reference_end+1)].sum(axis=1))):
+                        for p,v in enumerate(list(df[range(record.reference_start,record.reference_end)].sum(axis=1))):
                             if v ==0:
-                                for _ in range(record.reference_start,record.reference_end+1):
+                                for _ in range(record.reference_start,record.reference_end):
                                     df.at[p,_]=1
                                 plotList.append((p,record.reference_start,record.reference_end,'r',
                                                      record.qname+'_R',
@@ -99,7 +105,7 @@ class CalcMapping():
                                                      record.cigarstring,
                                                      record.mate_is_unmapped))
                                 break
-        df.to_csv('test.tsv',sep='\t')                        
+        df.to_csv('test.tsv',sep='\t')
         return plotList
 
     def plotListFRWRD(self,chrom,start,end):

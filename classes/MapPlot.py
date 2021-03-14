@@ -35,7 +35,7 @@ class PlotMapping():
             sys.exit()
         if self.direction and not self.schematic:
             self.PlotNucDir()
-            sys.exit()
+            return
         if not self.direction and not self.schematic:
             self.PlotNuc()
             sys.exit()
@@ -206,7 +206,10 @@ class PlotMapping():
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                 d.to_csv('test2.tsv',sep='\t')
                 self.CalcPlot.AxSet(self.CalcPlot.ax[0],chunk[1][1],chunk[1][2], direction=direction)
+                print('frwrd nuc start')
+
                 self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax[0],chunk[1][1],chunk[1][2],flag=self.flag)
+                print('frwrd nuc done')
                 self.CalcPlot.ax[0].get_xaxis().set_visible(False)
                 self.CalcPlot.ax[0].spines['bottom'].set_visible(False)
 
@@ -223,14 +226,20 @@ class PlotMapping():
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                 self.CalcPlot.ax[1].spines['bottom'].set_visible(False)
                 self.CalcPlot.AxSet(self.CalcPlot.ax[1],chunk[1][1],chunk[1][2], direction=direction)
+                print('r nuc start')
+
                 self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax[1],chunk[1][1],chunk[1][2],flag=self.flag)
+                print('r nuc done')
+
                 continue
 
         self.CalcPlot.PlotFasta(self.CalcPlot.ax[0])
         self.CalcPlot.PlotFasta(self.CalcPlot.ax[1])
-
+        print('plotted fa')
         i=self.mapping.split('/')[-1].split('Aligned')[0]
+        print('start save')
         plt.savefig('{}_{}_{}_{}.pdf'.format(i,self.chrom,str(self.start),str(self.end)),bbox_inches='tight')
+        print('finish save')
         plt.close()
 
     def PlotNuc(self):

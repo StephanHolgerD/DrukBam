@@ -16,6 +16,7 @@ class CalcPlot():
         self.flag=flag
         self.chunksize=chunksize
         self.fasta = fasta
+        self.colorDict={'A':'red','C':'blue','T':'green','G':'yellow','-':'black','N':'pink','a':'red','c':'blue','t':'green','g':'yellow','-':'black','n':'pink'}
     def startPlot(self,cols,direction,schematic):
 
         self.cols=cols
@@ -146,31 +147,29 @@ class CalcPlot():
     def PlotFasta(self,ax):
         if self.fasta=='None':
             return
-        colorDict={'A':'red','C':'blue','T':'green','G':'yellow','-':'black','N':'pink'}
         with pysam.FastaFile(self.fasta) as fa:
             for _,n in enumerate(fa.fetch(self.chrom,self.start-1,self.end)):
                 ax.text(self.start+_,0,n,fontsize=self.Fontsize,
-                        color=colorDict[n],alpha=1,family='monospace',ha='center',va='center',
+                        color=self.colorDict[n],alpha=1,family='monospace',ha='center',va='center',
                         bbox=dict(alpha=1,boxstyle='square,pad=0', fc='black', ec='none'))
 
     def PlotNucChunk(self,df,ax,start,end,flag='None'):
 
-
-        CIG=open('cig','w')
+        plotC=0
         df['y']=df['y']+1
-        colorDict={'A':'red','C':'blue','T':'green','G':'yellow','-':'black','N':'pink'}
         for y,s,e,d,qS,cig,mate in zip(df['y'],df['start'],df['end'],df['direction'],df['qSeq'],df['cigar'],df['mateMap']):
-            print(self.fasta)
             if self.fasta != 'None':
                 with pysam.FastaFile(self.fasta) as fa:
-                    fastaChunk=fa.fetch(self.chrom,s,e)
+                    fastaChunk=str(fa.fetch(self.chrom,s,e)).upper()
             e=e+1
             s=s+1
             if y>self.maxHeight:
+                if plotC>50:
+                    return
+                plotC=plotC+1
                 ax.plot((s,e),(self.maxHeight+1,self.maxHeight+1),color='red',alpha=0.1)
                 continue
             chunk_cigarstring=self.CigChunker(cig)
-            CIG.write(str(y) + '\t' +str(s) + '\t'+str(chunk_cigarstring)+'\n')
             query_alignment_sequence=qS
             chunkL=len(chunk_cigarstring)
             chunk_cigarstringS=[x for x in chunk_cigarstring if x =='S' or x =='H']
@@ -219,7 +218,7 @@ class CalcPlot():
                     else:
                         ax.text(x,y,query_alignment_sequence[p],fontsize=self.Fontsize,
                             color='black',alpha=alpha,family='monospace',ha='center',va='center',
-                            bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=colorDict[query_alignment_sequence[p]], ec='none'))
+                            bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=self.colorDict[query_alignment_sequence[p]], ec='none'))
                         fastapos=fastapos+1
                         continue
                 if alignPos=='I':
@@ -227,7 +226,6 @@ class CalcPlot():
                     continue
                 if alignPos=='D':
                     ax.text(x,y,query_alignment_sequence[p], fontsize=self.Fontsize,ha='center',va='center',
-                            color=colorDict[query_alignment_sequence[p]])
+                            color=self.colorDict[query_alignment_sequence[p]])
                     fastapos=fastapos+1
                     continue
-        CIG.close()

@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 import argparse
 import sys
 from classes.MapPlot import PlotMapping
-
+from time import time
 parser = argparse.ArgumentParser(description='Quick reference free plotting of bam file')
 requiredNamed = parser.add_argument_group('required arguments')
 requiredNamed.add_argument('-b','--bam', help='Pos. sorted and indexed bam file', required=True)
@@ -22,7 +23,7 @@ optArguments.add_argument('--fasta',default='None', help='fasta file for referen
 
 
 
-
+t=time()
 if len(sys.argv)==1:
     parser.print_help(sys.stderr)
     sys.exit(1)
@@ -36,5 +37,8 @@ schematic=args.schematic,
 direction=args.direction,
 coverage=args.maxcoverage,threads=args.threads,
 fasta=args.fasta)
+print('lol')
 ploter.Plot()
+print('lol')
 #ploter.Plot(,)
+print(time()-t)

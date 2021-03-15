@@ -3,15 +3,21 @@ import argparse
 import sys
 from druk_bam.MapPlot import PlotMapping
 from time import time
+
 parser = argparse.ArgumentParser(description='Quick reference free plotting of bam file')
-requiredNamed = parser.add_argument_group('required arguments')
+subparsers = parser.add_subparsers(help='plot variants from vcf file with padding / plot region')
+
+vcf_parser = subparsers.add_parser("vcf")
+region_parser = subparsers.add_parser("region")
+
+requiredNamed = region_parser.add_argument_group('required arguments')
 requiredNamed.add_argument('-b','--bam', help='Pos. sorted and indexed bam file', required=True)
 requiredNamed.add_argument('-c','--chromosome', help='name of chromosome/contig', required=True)
 requiredNamed.add_argument('-s','--start' ,help='start of region of interest', required=True)
 requiredNamed.add_argument('-e', '--end',help='end of the region of interest', required=True)
 
 
-optArguments = parser.add_argument_group('optional arguments')
+optArguments = region_parser.add_argument_group('optional arguments')
 optArguments.add_argument('--threads',default=1, help="number of cpu's  to run in paralell, ROI <1000 will always use 1 core",type=int)
 optArguments.add_argument('--maxcoverage',default=200, help="max cov to plot",type=int)
 
@@ -20,6 +26,9 @@ optArguments.add_argument('--schematic',default=False,action='store_true', help=
 optArguments.add_argument('--style',default='classic', help='different style options for the plot, def:classic',choices=['classic','fancy'])
 optArguments.add_argument('--flag',default='None', help='different style options for the plot, def:classic',choices=['None','MateUnmapped','SoftClipped','MateUnmappedSoftClipped','Insertion'])
 optArguments.add_argument('--fasta',default='None', help='fasta file for reference related plotting')
+
+
+
 
 
 

@@ -22,7 +22,6 @@ class CalcMapping():
         with pysam.AlignmentFile(self.mapping) as s:
             for record in tqdm(s.fetch(str(chrom),start,end,until_eof=True)):
                 if plotSet==set(range(start,end)):
-                    print('lol')
                     break
                 if not record.is_unmapped:
                     for _ in range(record.reference_start,record.reference_end+1):

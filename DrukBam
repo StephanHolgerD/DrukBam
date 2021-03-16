@@ -16,6 +16,12 @@ requiredNamed.add_argument('-c','--chromosome', help='name of chromosome/contig'
 requiredNamed.add_argument('-s','--start' ,help='start of region of interest', required=True)
 requiredNamed.add_argument('-e', '--end',help='end of the region of interest', required=True)
 
+requiredNamed = vcf_parser.add_argument_group('required arguments')
+requiredNamed.add_argument('-b','--bam', help='Pos. sorted and indexed bam file', required=True)
+requiredNamed.add_argument('-v','--vcf', help='vcf file with variants of interest', required=True)
+requiredNamed.add_argument('-p','--padding', help='number of nt around the variant', default=30)
+requiredNamed.add_argument('--highlight', help='highlight the position of interest', default=True, action='store_true')
+
 
 optArguments = region_parser.add_argument_group('optional arguments')
 optArguments.add_argument('--threads',default=1, help="number of cpu's  to run in paralell, ROI <1000 will always use 1 core",type=int)
@@ -46,8 +52,4 @@ schematic=args.schematic,
 direction=args.direction,
 coverage=args.maxcoverage,threads=args.threads,
 fasta=args.fasta)
-print('lol')
 ploter.Plot()
-print('lol')
-#ploter.Plot(,)
-print(time()-t)

@@ -6,6 +6,7 @@ from multiprocessing import Pool
 
 class CalcPlot():
     def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000, fasta=None):
+        plt.style.use('bmh')
         self.mapping=mapping
         self.chrom=chrom
         self.start=start
@@ -81,7 +82,6 @@ class CalcPlot():
         self.ax=ax
         self.fig=fig
         plt.subplots_adjust(wspace=0,hspace=0.05)
-        plt.style.use('bmh')
 
 
     def plotChunk(self,df,ax,start,end,direction=None):

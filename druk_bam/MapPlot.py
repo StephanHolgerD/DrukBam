@@ -7,7 +7,10 @@ from druk_bam.bamCalc import CalcMapping
 from druk_bam.PlotCalc import CalcPlot
 import sys
 class PlotMapping():
-    def __init__(self,mapping,chrom,start,end,coverage=200,flag='None',direction=False,schematic=False,chunksize=1000,threads=1,fasta=None):
+    def __init__(self,mapping,chrom,start,end,coverage=200,flag='None',direction=False,schematic=False,chunksize=1000,threads=1,fasta=None,output='current working directory',
+    out_name='name of mapping'):
+        self.outputdir=output
+        self.out_name=out_name
         self.mapping=mapping
         self.chrom=chrom
         self.start=start
@@ -26,20 +29,46 @@ class PlotMapping():
         self.fasta=fasta
         self.CalcMapping=CalcMapping(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads)
         self.CalcPlot=CalcPlot(mapping,chrom,self.start,self.end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,fasta=self.fasta)
+
+    def savePlot(self,schmematic=False,direction=False,reference=None):
+        if self.out_name=='name of mapping':
+            o=self.mapping.split('/')[-1]
+        else:
+            o=self.out_name
+        if self.outputdir=='current working directory':
+            od='./'
+        else:
+            od=self.outputdir
+        r=''
+        d=''
+        s=''
+        if schmematic!=None:
+            r='S'
+        if direction!=None:
+            d='D'
+        if reference!=None:
+            r='R'
+
+        plt.savefig('{}/{}_{}_{}_{}{}{}{}.pdf'.format(od,o,self.chrom,str(self.start),str(self.end),s,d,r),bbox_inches='tight')
+        plt.close()
+
     def Plot(self):
         if self.schematic and not self.direction:
             self.PlotSchmematic()
-            sys.exit()
+            self.savePlot(schmematic=True)
+            return
         if self.schematic and self.direction:
             self.PlotSchematicDir()
-            sys.exit()
+            self.savePlot(schmematic=True,direction=True)
+            return
         if self.direction and not self.schematic:
             self.PlotNucDir()
+            self.savePlot(direction=True,reference=self.fasta)
             return
         if not self.direction and not self.schematic:
             self.PlotNuc()
-            sys.exit()
-
+            self.savePlot(reference=self.fasta)
+            return
 
 
     def CalcFRWD(self):
@@ -68,8 +97,6 @@ class PlotMapping():
             end=end+self.chunksize
         if span/self.chunksize - int(span/self.chunksize)!=0:
             multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
-        print(multi)
-
         with Pool(processes=self.threads) as pool:
             results = pool.starmap(self.CalcMapping.plotListRVRS, multi)
         return results,multi
@@ -179,8 +206,7 @@ class PlotMapping():
                     self.CalcPlot.plotChunk(d,self.CalcPlot.ax[1,p],chunk[1][1],chunk[1][2])
 
         i=self.mapping.split('/')[-1].split('Aligned')[0]
-        plt.savefig('{}_{}_{}_{}.pdf'.format(i,self.chrom,str(self.start),str(self.end)),bbox_inches='tight')
-        plt.close()
+
 
 
     def PlotNucDir(self):
@@ -206,10 +232,8 @@ class PlotMapping():
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                 d.to_csv('test2.tsv',sep='\t')
                 self.CalcPlot.AxSet(self.CalcPlot.ax[0],chunk[1][1],chunk[1][2], direction=direction)
-                print('frwrd nuc start')
 
                 self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax[0],chunk[1][1],chunk[1][2],flag=self.flag)
-                print('frwrd nuc done')
                 self.CalcPlot.ax[0].get_xaxis().set_visible(False)
                 self.CalcPlot.ax[0].spines['bottom'].set_visible(False)
 
@@ -226,21 +250,15 @@ class PlotMapping():
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                 self.CalcPlot.ax[1].spines['bottom'].set_visible(False)
                 self.CalcPlot.AxSet(self.CalcPlot.ax[1],chunk[1][1],chunk[1][2], direction=direction)
-                print('r nuc start')
 
                 self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax[1],chunk[1][1],chunk[1][2],flag=self.flag)
-                print('r nuc done')
 
                 continue
 
         self.CalcPlot.PlotFasta(self.CalcPlot.ax[0])
         self.CalcPlot.PlotFasta(self.CalcPlot.ax[1])
-        print('plotted fa')
         i=self.mapping.split('/')[-1].split('Aligned')[0]
-        print('start save')
-        plt.savefig('{}_{}_{}_{}.pdf'.format(i,self.chrom,str(self.start),str(self.end)),bbox_inches='tight')
-        print('finish save')
-        plt.close()
+
 
     def PlotNuc(self):
         results,multi=self.Calc()
@@ -263,9 +281,7 @@ class PlotMapping():
 
 
 
-        i=self.mapping.split('/')[-1].split('Aligned')[0]
-        plt.savefig('{}_{}_{}_{}.pdf'.format(i,self.chrom,str(self.start),str(self.end)),bbox_inches='tight')
-        plt.close()
+
 
     def PlotSchmematic(self):
         results,multi=self.Calc()
@@ -305,9 +321,3 @@ class PlotMapping():
                     self.CalcPlot.ax[p].spines['bottom'].set_visible(False)
                     self.CalcPlot.AxSet(self.CalcPlot.ax[p],chunk[1][1],chunk[1][2],chunk=True)
                     self.CalcPlot.plotChunk(d,self.CalcPlot.ax[p],chunk[1][1],chunk[1][2])
-
-
-
-        i=self.mapping.split('/')[-1].split('Aligned')[0]
-        plt.savefig('{}_{}_{}_{}.pdf'.format(i,self.chrom,str(self.start),str(self.end)),bbox_inches='tight')
-        plt.close()

@@ -16,13 +16,10 @@ class CalcMapping():
         self.flag=flag
 
     def plotList(self,chrom,start,end):
-        df=pd.DataFrame(0,index=range(0,self.maxHeight),columns=range(start,end+1))
+        df=pd.DataFrame(0,index=range(0,self.maxHeight+50),columns=range(start,end+1))
         plotList=[]
-        plotSet=set()
         with pysam.AlignmentFile(self.mapping) as s:
             for record in tqdm(s.fetch(str(chrom),start,end,until_eof=True)):
-                if plotSet==set(range(start,end)):
-                    break
                 if not record.is_unmapped:
                     for _ in range(record.reference_start,record.reference_end+1):
                         if _ not in list(df):
@@ -49,8 +46,6 @@ class CalcMapping():
                             if v ==0:
                                 for _ in range(record.reference_start,record.reference_end+1):
                                     df.at[p,_]=1
-                                    if p>=self.maxHeight+20:
-                                        plotSet.add(_)
 
                                 if record.is_reverse:
                                     plotList.append((p,record.reference_start,record.reference_end,'r',
@@ -68,7 +63,7 @@ class CalcMapping():
         return plotList
 
     def plotListRVRS(self,chrom,start,end):
-        df=pd.DataFrame(0,index=range(0,1000),columns=range(start,end+1))
+        df=pd.DataFrame(0,index=range(0,self.maxHeight+50),columns=range(start,end+1))
         plotList=[]
         with pysam.AlignmentFile(self.mapping) as s:
             for record in tqdm(s.fetch(str(chrom),start,end,until_eof=True)):
@@ -104,11 +99,10 @@ class CalcMapping():
                                                      record.cigarstring,
                                                      record.mate_is_unmapped))
                                 break
-        df.to_csv('test.tsv',sep='\t')
         return plotList
 
     def plotListFRWRD(self,chrom,start,end):
-        df=pd.DataFrame(0,index=range(0,1000),columns=range(start,end+1))
+        df=pd.DataFrame(0,index=range(0,self.maxHeight+50),columns=range(start,end+1))
         plotList=[]
         with pysam.AlignmentFile(self.mapping) as s:
             for record in tqdm(s.fetch(str(chrom),start,end,until_eof=True)):

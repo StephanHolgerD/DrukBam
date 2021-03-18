@@ -20,6 +20,16 @@ class CalcMapping():
         plotList=[]
         with pysam.AlignmentFile(self.mapping) as s:
             for record in tqdm(s.fetch(str(chrom),start,end,until_eof=True)):
+                #print(df)
+                #print(list(df))
+                if record.reference_start>=start and record.reference_end<end:
+                    if df.loc[self.maxHeight,start:end].sum()>=(end-start):
+                        print('hardbreak')
+                        break
+
+                    if df.loc[self.maxHeight+50-1,record.reference_start:record.reference_end].sum()==(record.reference_end-record.reference_start):
+                        continue
+
                 if not record.is_unmapped:
                     for _ in range(record.reference_start,record.reference_end+1):
                         if _ not in list(df):
@@ -33,7 +43,7 @@ class CalcMapping():
                                              record.query_alignment_sequence,
                                              record.cigarstring,
                                              record.mate_is_unmapped))
-                        else:
+                        if not record.is_reverse:
                             plotList.append((0,record.reference_start,record.reference_end,'f',
                                              record.qname+'_F',
                                              record.query_alignment_sequence,
@@ -53,7 +63,7 @@ class CalcMapping():
                                                      record.query_alignment_sequence,
                                                      record.cigarstring,
                                                      record.mate_is_unmapped))
-                                else:
+                                if not record.is_reverse:
                                     plotList.append((p,record.reference_start,record.reference_end,'f',
                                                      record.qname+'_F',
                                                      record.query_alignment_sequence,

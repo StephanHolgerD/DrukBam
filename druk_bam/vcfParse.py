@@ -12,7 +12,7 @@ class VcfPlotter():
         self.out_name=out_name
         self.mapping=mapping
         self.vcf=vcf
-        self.padding=20
+        self.padding=padding
         self.Fontsize=3
         self.threads=threads
         self.flag=flag
@@ -62,6 +62,6 @@ class VcfPlotter():
         multi=[]
         with pysam.VariantFile(self.vcf) as v:
             for record in v:
-                multi.append((record.chrom,record.pos-self.padding,record.pos+self.padding))
+                multi.append((record.chrom,(record.pos-self.padding),(record.pos+self.padding)))
         with Pool(processes=self.threads) as pool:
             results = pool.starmap(self.PlotV, multi)

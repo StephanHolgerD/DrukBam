@@ -17,7 +17,7 @@ class CalcPlot():
         self.flag=flag
         self.chunksize=chunksize
         self.fasta = fasta
-        self.colorDict={'A':'red','C':'blue','T':'green','G':'yellow','-':'black','N':'pink','a':'red','c':'blue','t':'green','g':'yellow','-':'black','n':'pink'}
+        self.colorDict={'A':'red','C':'blue','T':'green','G':'yellow','-':'white','N':'pink','a':'red','c':'blue','t':'green','g':'yellow','-':'white','n':'pink'}
     def startPlot(self,cols,direction,schematic):
 
         self.cols=cols
@@ -82,6 +82,7 @@ class CalcPlot():
         self.ax=ax
         self.fig=fig
         plt.subplots_adjust(wspace=0,hspace=0.05)
+        return self.fig,self.ax
 
 
     def plotChunk(self,df,ax,start,end,direction=None):
@@ -153,6 +154,15 @@ class CalcPlot():
                         color=self.colorDict[n],alpha=1,family='monospace',ha='center',va='center',
                         bbox=dict(alpha=1,boxstyle='square,pad=0', fc='black', ec='none'))
 
+    def listConsec(self,l):
+        retL=[]
+        c=0
+        for e,x in enumerate(l):
+            if x+1 not in l:
+                retL.append(l[c:e+1])
+                c=e+1
+        return(retL)
+
     def PlotNucChunk(self,df,ax,start,end,flag='None'):
 
         plotC=set()
@@ -171,10 +181,15 @@ class CalcPlot():
                 ax.plot((s,e),(self.maxHeight+1,self.maxHeight+1),color='red',alpha=0.1)
                 continue
             chunk_cigarstring=self.CigChunker(cig)
+            temp_cig=chunk_cigarstring
             query_alignment_sequence=qS
             chunkL=len(chunk_cigarstring)
             chunk_cigarstringS=[x for x in chunk_cigarstring if x =='S' or x =='H']
             chunk_cigarstring=[x for x in chunk_cigarstring if x !='S' and x !='H']
+            ipos=[x for x,y in enumerate(chunk_cigarstring) if y=='I']
+            ipos=self.listConsec(ipos)
+            chunk_cigarstring=[x for x in chunk_cigarstring if x !='I']
+
             for p,_ in enumerate(chunk_cigarstring):
                 if _=='D':
                     qs1=query_alignment_sequence[:p]
@@ -197,6 +212,7 @@ class CalcPlot():
                     alpha=0.3
             fastapos=0
             for p,alignPos in enumerate(chunk_cigarstring):
+
                 x=s+p
                 if x>self.end:
                     continue
@@ -222,11 +238,25 @@ class CalcPlot():
                             bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=self.colorDict[query_alignment_sequence[p]], ec='none'))
                         fastapos=fastapos+1
                         continue
-                if alignPos=='I':
-                    ax.plot((x-1,x-1),(y-0.5,y+0.5),linewidth=0.5)
-                    continue
+
                 if alignPos=='D':
-                    ax.text(x,y,query_alignment_sequence[p], fontsize=self.Fontsize,ha='center',va='center',
-                            color=self.colorDict[query_alignment_sequence[p]])
+                    ax.text(x,y,query_alignment_sequence[p], fontsize=self.Fontsize,ha='center',va='center',family='monospace',
+                            color='black',bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=self.colorDict[query_alignment_sequence[p]], ec='darkgrey',linewidth=0.00001))
                     fastapos=fastapos+1
                     continue
+
+            if ipos!=[]:
+                print('--------')
+                print(self.start)
+                print(temp_cig)
+                print(fastaChunk)
+                print(chunk_cigarstring)
+                print(ipos)
+                print(y)
+                for i in ipos:
+                    minimum=min(i)
+                    x=s+minimum
+                    for ii in i:
+                        ax.plot((x,x),(y-0.5,y+0.5),linewidth=0.5)
+                        print(x)
+                        x=x+0.05

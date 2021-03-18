@@ -20,7 +20,7 @@ requiredNamed.add_argument('-e', '--end',help='end of the region of interest', r
 requiredNamed = vcf_parser.add_argument_group('required arguments')
 requiredNamed.add_argument('-b','--bam', help='Pos. sorted and indexed bam file', required=True)
 requiredNamed.add_argument('-v','--vcf', help='vcf file with variants of interest', required=True)
-requiredNamed.add_argument('-p','--padding', help='number of nt around the variant', default=30)
+requiredNamed.add_argument('-p','--padding', help='number of nt around the variant', default=25,type=int)
 requiredNamed.add_argument('--highlight', help='highlight the position of interest', default=True, action='store_true')
 
 
@@ -51,7 +51,7 @@ optArguments.add_argument('--outputdir',default='current working directory', hel
 optArguments.add_argument('-i','--id',default='name of mapping', help='output filename')
 
 
-
+t=time()
 if len(sys.argv)==1:
     parser.print_help(sys.stderr)
     sys.exit(1)
@@ -78,5 +78,7 @@ if args.__contains__('vcf'):
     coverage=args.maxcoverage,threads=args.threads,
     fasta=args.fasta,
     out_name=args.id,
-    output=args.outputdir)
+    output=args.outputdir,
+    padding=args.padding)
     ploter.MultiPlot()
+print(time()-t)

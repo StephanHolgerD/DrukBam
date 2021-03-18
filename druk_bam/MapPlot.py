@@ -49,8 +49,8 @@ class PlotMapping():
         if reference!=None:
             r='R'
 
-        plt.savefig('{}/{}_{}_{}_{}{}{}{}.pdf'.format(od,o,self.chrom,str(self.start),str(self.end),s,d,r),bbox_inches='tight')
-        plt.close()
+        self.fig.savefig('{}/{}_{}_{}_{}{}{}{}.pdf'.format(od,o,self.chrom,str(self.start),str(self.end),s,d,r),bbox_inches='tight')
+        #plt.close()
 
     def Plot(self):
         if self.schematic and not self.direction:
@@ -76,14 +76,18 @@ class PlotMapping():
         multi=[]
         start=self.start
         end=self.start+self.chunksize
-        for _ in range(0,int(span/self.chunksize)):
-            multi.append((self.chrom,start,end))
-            start=end
-            end=end+self.chunksize
-        if span/self.chunksize - int(span/self.chunksize)!=0:
-            multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
-        with Pool(processes=self.threads) as pool:
-            results = pool.starmap(self.CalcMapping.plotListFRWRD, multi)
+        if span<self.chunksize:
+            results=[self.CalcMapping.plotListFRWRD(self.chrom,self.start,self.end)]
+            multi.append((self.chrom,self.start,self.end))
+        else:
+            for _ in range(0,int(span/self.chunksize)):
+                multi.append((self.chrom,start,end))
+                start=end
+                end=end+self.chunksize
+            if span/self.chunksize - int(span/self.chunksize)!=0:
+                multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
+            with Pool(processes=self.threads) as pool:
+                results = pool.starmap(self.CalcMapping.plotListFRWRD, multi)
         return results,multi
 
     def CalcRVRS(self):
@@ -91,14 +95,18 @@ class PlotMapping():
         multi=[]
         start=self.start
         end=self.start+self.chunksize
-        for _ in range(0,int(span/self.chunksize)):
-            multi.append((self.chrom,start,end))
-            start=end
-            end=end+self.chunksize
-        if span/self.chunksize - int(span/self.chunksize)!=0:
-            multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
-        with Pool(processes=self.threads) as pool:
-            results = pool.starmap(self.CalcMapping.plotListRVRS, multi)
+        if span<self.chunksize:
+            results=[self.CalcMapping.plotListRVRS(self.chrom,self.start,self.end)]
+            multi.append((self.chrom,self.start,self.end))
+        else:
+            for _ in range(0,int(span/self.chunksize)):
+                multi.append((self.chrom,start,end))
+                start=end
+                end=end+self.chunksize
+            if span/self.chunksize - int(span/self.chunksize)!=0:
+                multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
+            with Pool(processes=self.threads) as pool:
+                results = pool.starmap(self.CalcMapping.plotListRVRS, multi)
         return results,multi
 
     def Calc(self):
@@ -106,14 +114,18 @@ class PlotMapping():
         multi=[]
         start=self.start
         end=self.start+self.chunksize
-        for _ in range(0,int(span/self.chunksize)):
-            multi.append((self.chrom,start,end))
-            start=end
-            end=end+self.chunksize
-        if span/self.chunksize - int(span/self.chunksize)!=0:
-            multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
-        with Pool(processes=self.threads) as pool:
-            results = pool.starmap(self.CalcMapping.plotList, multi)
+        if span < self.chunksize:
+            results=[self.CalcMapping.plotList(self.chrom,self.start,self.end)]
+            multi.append((self.chrom,self.start,self.end))
+        else:
+            for _ in range(0,int(span/self.chunksize)):
+                multi.append((self.chrom,start,end))
+                start=end
+                end=end+self.chunksize
+            if span/self.chunksize - int(span/self.chunksize)!=0:
+                multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
+            with Pool(processes=self.threads) as pool:
+                results = pool.starmap(self.CalcMapping.plotList, multi)
         return results,multi
 
 
@@ -128,82 +140,82 @@ class PlotMapping():
         for p,chunk in enumerate(zip(resultsR,multiR)):
             direction='Reverse'
             if resultsR[p]==[] and len(resultsR)==1:
-                self.CalcPlot.AxSet(self.CalcPlot.ax[0,p],chunk[1][1],chunk[1][2],direction=direction)
-                self.CalcPlot.ax[0,p].spines['top'].set_visible(False)
-                self.CalcPlot.ax[0,p].get_xaxis().set_visible(False)
+                self.CalcPlot.AxSet(self.ax[0,p],chunk[1][1],chunk[1][2],direction=direction)
+                self.ax[0,p].spines['top'].set_visible(False)
+                self.ax[0,p].get_xaxis().set_visible(False)
                 continue
 
             if len(resultsR)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                self.CalcPlot.AxSet(self.CalcPlot.ax[0],chunk[1][1],chunk[1][2],direction=direction)
-                self.CalcPlot.plotChunk(d,self.CalcPlot.ax[0],chunk[1][1],chunk[1][2])
-                self.CalcPlot.ax[0].spines['top'].set_visible(False)
-                self.CalcPlot.ax[0].get_xaxis().set_visible(False)
+                self.CalcPlot.AxSet(self.ax[0],chunk[1][1],chunk[1][2],direction=direction)
+                self.CalcPlot.plotChunk(d,self.ax[0],chunk[1][1],chunk[1][2])
+                self.ax[0].spines['top'].set_visible(False)
+                self.ax[0].get_xaxis().set_visible(False)
                 continue
 
             if p==0:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                self.CalcPlot.AxSet(self.CalcPlot.ax[0,p],chunk[1][1],chunk[1][2],direction=direction)
-                self.CalcPlot.plotChunk(d,self.CalcPlot.ax[0,p],chunk[1][1],chunk[1][2])
-                self.CalcPlot.ax[0,p].get_xaxis().set_visible(False)
-                self.CalcPlot.ax[0,p].spines['top'].set_visible(False)
-                self.CalcPlot.ax[0,p].get_xaxis().set_visible(False)
+                self.CalcPlot.AxSet(self.ax[0,p],chunk[1][1],chunk[1][2],direction=direction)
+                self.CalcPlot.plotChunk(d,self.ax[0,p],chunk[1][1],chunk[1][2])
+                self.ax[0,p].get_xaxis().set_visible(False)
+                self.ax[0,p].spines['top'].set_visible(False)
+                self.ax[0,p].get_xaxis().set_visible(False)
                 continue
 
             else:
                 if resultsR[p-1]==[]:
                     d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                    self.CalcPlot.AxSet(self.CalcPlot.ax[0,p],chunk[1][1],chunk[1][2],chunk=True)
-                    self.CalcPlot.plotChunk(d,self.CalcPlot.ax[0,p],chunk[1][1],chunk[1][2])
-                    self.CalcPlot.ax[0,p].spines['top'].set_visible(False)
-                    self.CalcPlot.ax[0,p].get_xaxis().set_visible(False)
+                    self.CalcPlot.AxSet(self.ax[0,p],chunk[1][1],chunk[1][2],chunk=True)
+                    self.CalcPlot.plotChunk(d,self.ax[0,p],chunk[1][1],chunk[1][2])
+                    self.ax[0,p].spines['top'].set_visible(False)
+                    self.ax[0,p].get_xaxis().set_visible(False)
 
                 else:
                     d=self.CalcMapping.PlotreadsDF(resultsR[p-1],resultsR[p],multiR[p-1][2])
-                    self.CalcPlot.AxSet(self.CalcPlot.ax[0,p],chunk[1][1],chunk[1][2],chunk=True)
-                    self.CalcPlot.plotChunk(d,self.CalcPlot.ax[0,p],chunk[1][1],chunk[1][2])
-                    self.CalcPlot.ax[0,p].spines['top'].set_visible(False)
-                    self.CalcPlot.ax[0,p].get_xaxis().set_visible(False)
+                    self.CalcPlot.AxSet(self.ax[0,p],chunk[1][1],chunk[1][2],chunk=True)
+                    self.CalcPlot.plotChunk(d,self.ax[0,p],chunk[1][1],chunk[1][2])
+                    self.ax[0,p].spines['top'].set_visible(False)
+                    self.ax[0,p].get_xaxis().set_visible(False)
 
         for p,chunk in enumerate(zip(resultsF,multiF)):
             direction='Forward'
 
 
             if resultsF[p]==[] and len(resultsR)==1:
-                self.CalcPlot.AxSet(self.CalcPlot.ax[1,p],chunk[1][1],chunk[1][2],direction=direction)
+                self.CalcPlot.AxSet(self.ax[1,p],chunk[1][1],chunk[1][2],direction=direction)
                 continue
 
             if resultsF[p]==[]:
-                self.CalcPlot.AxSet(self.CalcPlot.ax[1,p],chunk[1][1],chunk[1][2],direction=direction)
+                self.CalcPlot.AxSet(self.ax[1,p],chunk[1][1],chunk[1][2],direction=direction)
 
 
             if len(resultsF)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                self.CalcPlot.AxSet(self.CalcPlot.ax[1],chunk[1][1],chunk[1][2],direction=direction)
-                self.CalcPlot.ax[1].spines['bottom'].set_visible(False)
-                self.CalcPlot.ax[1].spines['top'].set_visible(False)
-                self.CalcPlot.plotChunk(d,self.CalcPlot.ax[1],chunk[1][1],chunk[1][2])
+                self.CalcPlot.AxSet(self.ax[1],chunk[1][1],chunk[1][2],direction=direction)
+                self.ax[1].spines['bottom'].set_visible(False)
+                self.ax[1].spines['top'].set_visible(False)
+                self.CalcPlot.plotChunk(d,self.ax[1],chunk[1][1],chunk[1][2])
                 continue
 
             if p==0:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                self.CalcPlot.AxSet(self.CalcPlot.ax[1,p],chunk[1][1],chunk[1][2],direction=direction,chunk=True)
-                self.CalcPlot.ax[1,p].spines['bottom'].set_visible(False)
-                self.CalcPlot.ax[1,p].spines['top'].set_visible(False)
-                self.CalcPlot.plotChunk(d,self.CalcPlot.ax[1,p],chunk[1][1],chunk[1][2])
+                self.CalcPlot.AxSet(self.ax[1,p],chunk[1][1],chunk[1][2],direction=direction,chunk=True)
+                self.ax[1,p].spines['bottom'].set_visible(False)
+                self.ax[1,p].spines['top'].set_visible(False)
+                self.CalcPlot.plotChunk(d,self.ax[1,p],chunk[1][1],chunk[1][2])
             else:
                 if resultsF[p-1]==[]:
                     d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                    self.CalcPlot.AxSet(self.CalcPlot.ax[1,p],chunk[1][1],chunk[1][2],chunk=True)
-                    self.CalcPlot.ax[1,p].spines['bottom'].set_visible(False)
-                    self.CalcPlot.ax[1,p].spines['top'].set_visible(False)
-                    self.CalcPlot.plotChunk(d,self.CalcPlot.ax[1,p],chunk[1][1],chunk[1][2])
+                    self.CalcPlot.AxSet(self.ax[1,p],chunk[1][1],chunk[1][2],chunk=True)
+                    self.ax[1,p].spines['bottom'].set_visible(False)
+                    self.ax[1,p].spines['top'].set_visible(False)
+                    self.CalcPlot.plotChunk(d,self.ax[1,p],chunk[1][1],chunk[1][2])
                 else:
                     d=self.CalcMapping.PlotreadsDF(resultsF[p-1],resultsF[p],multiF[p-1][2])
-                    self.CalcPlot.AxSet(self.CalcPlot.ax[1,p],chunk[1][1],chunk[1][2],chunk=True)
-                    self.CalcPlot.ax[1,p].spines['bottom'].set_visible(False)
-                    self.CalcPlot.ax[1,p].spines['top'].set_visible(False)
-                    self.CalcPlot.plotChunk(d,self.CalcPlot.ax[1,p],chunk[1][1],chunk[1][2])
+                    self.CalcPlot.AxSet(self.ax[1,p],chunk[1][1],chunk[1][2],chunk=True)
+                    self.ax[1,p].spines['bottom'].set_visible(False)
+                    self.ax[1,p].spines['top'].set_visible(False)
+                    self.CalcPlot.plotChunk(d,self.ax[1,p],chunk[1][1],chunk[1][2])
 
         i=self.mapping.split('/')[-1].split('Aligned')[0]
 
@@ -215,27 +227,27 @@ class PlotMapping():
         if len(multiR)>1:
             print('nuc plots over 1000nt not supported due to fontsize')
             sys.exit()
-        self.CalcPlot.startPlot(len(resultsR),self.direction,self.schematic)
+        self.fig,self.ax=self.CalcPlot.startPlot(len(resultsR),self.direction,self.schematic)
 
         for p,chunk in enumerate(zip(resultsR,multiR)):
             direction='Reverse'
 
 
             if resultsR[p]==[]:
-                self.CalcPlot.AxSet(self.CalcPlot.ax[0],chunk[1][1],chunk[1][2], direction=direction)
-                self.CalcPlot.ax[0].get_xaxis().set_visible(False)
-                self.CalcPlot.ax[0].spines['bottom'].set_visible(False)
+                self.CalcPlot.AxSet(self.ax[0],chunk[1][1],chunk[1][2], direction=direction)
+                self.ax[0].get_xaxis().set_visible(False)
+                self.ax[0].spines['bottom'].set_visible(False)
 
                 continue
 
             if len(resultsR)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                 d.to_csv('test2.tsv',sep='\t')
-                self.CalcPlot.AxSet(self.CalcPlot.ax[0],chunk[1][1],chunk[1][2], direction=direction)
+                self.CalcPlot.AxSet(self.ax[0],chunk[1][1],chunk[1][2], direction=direction)
 
-                self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax[0],chunk[1][1],chunk[1][2],flag=self.flag)
-                self.CalcPlot.ax[0].get_xaxis().set_visible(False)
-                self.CalcPlot.ax[0].spines['bottom'].set_visible(False)
+                self.CalcPlot.PlotNucChunk(d,self.ax[0],chunk[1][1],chunk[1][2],flag=self.flag)
+                self.ax[0].get_xaxis().set_visible(False)
+                self.ax[0].spines['bottom'].set_visible(False)
 
                 continue
 
@@ -243,26 +255,26 @@ class PlotMapping():
         for p,chunk in enumerate(zip(resultsF,multiF)):
             direction='Forward'
             if resultsF[p]==[]:
-                self.CalcPlot.AxSet(self.CalcPlot.ax[1],chunk[1][1],chunk[1][2], direction=direction)
+                self.CalcPlot.AxSet(self.ax[1],chunk[1][1],chunk[1][2], direction=direction)
                 continue
 
             if len(resultsF)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                self.CalcPlot.ax[1].spines['bottom'].set_visible(False)
-                self.CalcPlot.AxSet(self.CalcPlot.ax[1],chunk[1][1],chunk[1][2], direction=direction)
+                self.ax[1].spines['bottom'].set_visible(False)
+                self.CalcPlot.AxSet(self.ax[1],chunk[1][1],chunk[1][2], direction=direction)
 
-                self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax[1],chunk[1][1],chunk[1][2],flag=self.flag)
+                self.CalcPlot.PlotNucChunk(d,self.ax[1],chunk[1][1],chunk[1][2],flag=self.flag)
 
                 continue
 
-        self.CalcPlot.PlotFasta(self.CalcPlot.ax[0])
-        self.CalcPlot.PlotFasta(self.CalcPlot.ax[1])
+        self.CalcPlot.PlotFasta(self.ax[0])
+        self.CalcPlot.PlotFasta(self.ax[1])
         i=self.mapping.split('/')[-1].split('Aligned')[0]
 
 
     def PlotNuc(self):
         results,multi=self.Calc()
-        self.CalcPlot.startPlot(len(results),self.direction,self.schematic)
+        self.fig,self.ax=self.CalcPlot.startPlot(len(results),self.direction,self.schematic)
         if len(multi)>1:
             print('nuc plots over 1000nt not supported due to fontsize')
             sys.exit()
@@ -270,14 +282,15 @@ class PlotMapping():
 
             if results[p]==[]:
 
-                self.CalcPlot.AxSet(self.CalcPlot.ax,chunk[1][1],chunk[1][2])
+                self.CalcPlot.AxSet(self.ax,chunk[1][1],chunk[1][2])
                 continue
             else:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                self.CalcPlot.AxSet(self.CalcPlot.ax,chunk[1][1],chunk[1][2])
-                self.CalcPlot.ax.spines['bottom'].set_visible(False)
-                self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax,chunk[1][1],chunk[1][2],flag=self.flag)
+                self.CalcPlot.AxSet(self.ax,chunk[1][1],chunk[1][2])
+                self.ax.spines['bottom'].set_visible(False)
+                self.CalcPlot.PlotNucChunk(d,self.ax,chunk[1][1],chunk[1][2],flag=self.flag)
                 continue
+        self.CalcPlot.PlotFasta(self.ax)
 
 
 
@@ -285,39 +298,39 @@ class PlotMapping():
 
     def PlotSchmematic(self):
         results,multi=self.Calc()
-        self.CalcPlot.startPlot(len(results),self.direction,self.schematic)
+        self.fig,self.ax=self.CalcPlot.startPlot(len(results),self.direction,self.schematic)
         for p,chunk in enumerate(zip(results,multi)):
 
             if results[p]==[] and len(results)==1:
-                self.CalcPlot.AxSet(self.CalcPlot.ax,chunk[1][1],chunk[1][2])
+                self.CalcPlot.AxSet(self.ax,chunk[1][1],chunk[1][2])
                 continue
 
             if results[p]==[]:
-                self.CalcPlot.AxSet(self.CalcPlot.ax[p],chunk[1][1],chunk[1][2])
+                self.CalcPlot.AxSet(self.ax[p],chunk[1][1],chunk[1][2])
 
 
             if len(results)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                self.CalcPlot.AxSet(self.CalcPlot.ax,chunk[1][1],chunk[1][2])
-                self.CalcPlot.ax.spines['bottom'].set_visible(False)
-                self.CalcPlot.plotChunk(d,self.CalcPlot.ax,chunk[1][1],chunk[1][2])
+                self.CalcPlot.AxSet(self.ax,chunk[1][1],chunk[1][2])
+                self.ax.spines['bottom'].set_visible(False)
+                self.CalcPlot.plotChunk(d,self.ax,chunk[1][1],chunk[1][2])
 
-                #self.CalcPlot.PlotNucChunk(d,self.CalcPlot.ax,chunk[1][1],chunk[1][2],flag=self.flag)
+                #self.CalcPlot.PlotNucChunk(d,self.ax,chunk[1][1],chunk[1][2],flag=self.flag)
                 continue
 
             if p==0:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                self.CalcPlot.AxSet(self.CalcPlot.ax[p],chunk[1][1],chunk[1][2],chunk=True)
-                self.CalcPlot.ax[p].spines['bottom'].set_visible(False)
-                self.CalcPlot.plotChunk(d,self.CalcPlot.ax[p],chunk[1][1],chunk[1][2])
+                self.CalcPlot.AxSet(self.ax[p],chunk[1][1],chunk[1][2],chunk=True)
+                self.ax[p].spines['bottom'].set_visible(False)
+                self.CalcPlot.plotChunk(d,self.ax[p],chunk[1][1],chunk[1][2])
             else:
                 if results[p-1]==[]:
                     d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                    self.CalcPlot.ax[p].spines['bottom'].set_visible(False)
-                    self.CalcPlot.AxSet(self.CalcPlot.ax[p],chunk[1][1],chunk[1][2],chunk=True)
-                    self.CalcPlot.plotChunk(d,self.CalcPlot.ax[p],chunk[1][1],chunk[1][2])
+                    self.ax[p].spines['bottom'].set_visible(False)
+                    self.CalcPlot.AxSet(self.ax[p],chunk[1][1],chunk[1][2],chunk=True)
+                    self.CalcPlot.plotChunk(d,self.ax[p],chunk[1][1],chunk[1][2])
                 else:
                     d=self.CalcMapping.PlotreadsDF(results[p-1],results[p],multi[p-1][2])
-                    self.CalcPlot.ax[p].spines['bottom'].set_visible(False)
-                    self.CalcPlot.AxSet(self.CalcPlot.ax[p],chunk[1][1],chunk[1][2],chunk=True)
-                    self.CalcPlot.plotChunk(d,self.CalcPlot.ax[p],chunk[1][1],chunk[1][2])
+                    self.ax[p].spines['bottom'].set_visible(False)
+                    self.CalcPlot.AxSet(self.ax[p],chunk[1][1],chunk[1][2],chunk=True)
+                    self.CalcPlot.plotChunk(d,self.ax[p],chunk[1][1],chunk[1][2])

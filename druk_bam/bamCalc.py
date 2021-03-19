@@ -23,11 +23,11 @@ class CalcMapping():
                 #print(df)
                 #print(list(df))
                 if record.reference_start>=start and record.reference_end<end:
-                    if df.loc[self.maxHeight,start:end].sum()>=(end-start):
+                    if df.loc[self.maxHeight,start:end].sum()>=((self.end-self.start)*0.9):
                         print('hardbreak')
                         break
 
-                    if df.loc[self.maxHeight+50-1,record.reference_start:record.reference_end].sum()==(record.reference_end-record.reference_start):
+                    if df.loc[self.maxHeight+50-1,record.reference_start:record.reference_end].sum()>=((record.reference_end-record.reference_start)*0.9):
                         continue
 
                 if not record.is_unmapped:

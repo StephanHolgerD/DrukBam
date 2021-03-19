@@ -30,11 +30,12 @@ optArguments.add_argument('--maxcoverage',default=200, help="max cov to plot",ty
 
 optArguments.add_argument('--direction',default=False,action='store_true', help="split reads by forward and reverse")
 optArguments.add_argument('--schematic',default=False,action='store_true', help='plot no nucleotide, recommended for ROI>1000')
-optArguments.add_argument('--style',default='classic', help='different style options for the plot, def:classic',choices=['classic','fancy'])
+optArguments.add_argument('--style',default=None, help='different style options for the plot, provide .ini file')
 optArguments.add_argument('--flag',default='None', help='different style options for the plot, def:classic',choices=['None','MateUnmapped','SoftClipped','MateUnmappedSoftClipped','Insertion'])
 optArguments.add_argument('--fasta',default='None', help='fasta file for reference related plotting')
 optArguments.add_argument('--outputdir',default='current working directory', help='directory for output')
 optArguments.add_argument('-i','--id',default='name of mapping', help='output filename')
+optArguments.add_argument('--chunksize',default=1000, help='max size of visualized area, can be increases but will sow down calculation',type=int)
 
 
 
@@ -44,11 +45,12 @@ optArguments.add_argument('--maxcoverage',default=200, help="max cov to plot",ty
 
 optArguments.add_argument('--direction',default=False,action='store_true', help="split reads by forward and reverse")
 optArguments.add_argument('--schematic',default=False,action='store_true', help='plot no nucleotide, recommended for ROI>1000')
-optArguments.add_argument('--style',default='classic', help='different style options for the plot, def:classic',choices=['classic','fancy'])
+optArguments.add_argument('--style',default=None, help='different style options for the plot, provide .ini file')
 optArguments.add_argument('--flag',default='None', help='different style options for the plot, def:classic',choices=['None','MateUnmapped','SoftClipped','MateUnmappedSoftClipped','Insertion'])
 optArguments.add_argument('--fasta',default='None', help='fasta file for reference related plotting')
 optArguments.add_argument('--outputdir',default='current working directory', help='directory for output')
 optArguments.add_argument('-i','--id',default='name of mapping', help='output filename')
+optArguments.add_argument('--chunksize',default=1000, help='max size of visualized area, can be increases but will sow down calculation',type=int)
 
 
 t=time()
@@ -67,7 +69,9 @@ if args.__contains__('start'):
     coverage=args.maxcoverage,threads=args.threads,
     fasta=args.fasta,
     out_name=args.id,
-    output=args.outputdir)
+    output=args.outputdir,
+    chunksize=args.chunksize,
+    style=args.style)
     ploter.Plot()
 if args.__contains__('vcf'):
     print('kob')
@@ -79,6 +83,8 @@ if args.__contains__('vcf'):
     fasta=args.fasta,
     out_name=args.id,
     output=args.outputdir,
-    padding=args.padding)
+    padding=args.padding,
+    chunksize=args.chunksize,
+    style=args.style)
     ploter.MultiPlot()
 print(time()-t)

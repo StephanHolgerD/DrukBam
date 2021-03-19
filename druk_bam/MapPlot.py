@@ -8,7 +8,7 @@ from druk_bam.PlotCalc import CalcPlot
 import sys
 class PlotMapping():
     def __init__(self,mapping,chrom,start,end,coverage=200,flag='None',direction=False,schematic=False,chunksize=1000,threads=1,fasta=None,output='current working directory',
-    out_name='name of mapping'):
+    out_name='name of mapping',vcf=False,style='classic'):
         self.outputdir=output
         self.out_name=out_name
         self.mapping=mapping
@@ -27,9 +27,10 @@ class PlotMapping():
         self.schematic=schematic
         self.threads=threads
         self.fasta=fasta
+        self.style=style
         self.CalcMapping=CalcMapping(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads)
-        self.CalcPlot=CalcPlot(mapping,chrom,self.start,self.end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,fasta=self.fasta)
-
+        self.CalcPlot=CalcPlot(mapping,chrom,self.start,self.end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,fasta=self.fasta,style=self.style)
+        self.vcf=vcf
     def savePlot(self,schmematic=False,direction=False,reference=None):
         if self.out_name=='name of mapping':
             o=self.mapping.split('/')[-1]
@@ -135,7 +136,7 @@ class PlotMapping():
         resultsR,multiR=self.CalcRVRS()
         resultsF,multiF=self.CalcFRWD()
 
-        self.CalcPlot.startPlot(len(resultsR),self.direction,self.schematic)
+        self.fig,self.ax=self.CalcPlot.startPlot(len(resultsR),self.direction,self.schematic)
 
         for p,chunk in enumerate(zip(resultsR,multiR)):
             direction='Reverse'
@@ -217,7 +218,6 @@ class PlotMapping():
                     self.ax[1,p].spines['top'].set_visible(False)
                     self.CalcPlot.plotChunk(d,self.ax[1,p],chunk[1][1],chunk[1][2])
 
-        i=self.mapping.split('/')[-1].split('Aligned')[0]
 
 
 
@@ -234,7 +234,7 @@ class PlotMapping():
 
 
             if resultsR[p]==[]:
-                self.CalcPlot.AxSet(self.ax[0],chunk[1][1],chunk[1][2], direction=direction)
+                self.CalcPlot.AxSet(self.ax[0],chunk[1][1],chunk[1][2], direction=direction,vcf=self.vcf)
                 self.ax[0].get_xaxis().set_visible(False)
                 self.ax[0].spines['bottom'].set_visible(False)
 
@@ -243,7 +243,7 @@ class PlotMapping():
             if len(resultsR)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                 d.to_csv('test2.tsv',sep='\t')
-                self.CalcPlot.AxSet(self.ax[0],chunk[1][1],chunk[1][2], direction=direction)
+                self.CalcPlot.AxSet(self.ax[0],chunk[1][1],chunk[1][2], direction=direction,vcf=self.vcf)
 
                 self.CalcPlot.PlotNucChunk(d,self.ax[0],chunk[1][1],chunk[1][2],flag=self.flag)
                 self.ax[0].get_xaxis().set_visible(False)
@@ -255,13 +255,13 @@ class PlotMapping():
         for p,chunk in enumerate(zip(resultsF,multiF)):
             direction='Forward'
             if resultsF[p]==[]:
-                self.CalcPlot.AxSet(self.ax[1],chunk[1][1],chunk[1][2], direction=direction)
+                self.CalcPlot.AxSet(self.ax[1],chunk[1][1],chunk[1][2], direction=direction,vcf=self.vcf)
                 continue
 
             if len(resultsF)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
                 self.ax[1].spines['bottom'].set_visible(False)
-                self.CalcPlot.AxSet(self.ax[1],chunk[1][1],chunk[1][2], direction=direction)
+                self.CalcPlot.AxSet(self.ax[1],chunk[1][1],chunk[1][2], direction=direction,vcf=self.vcf)
 
                 self.CalcPlot.PlotNucChunk(d,self.ax[1],chunk[1][1],chunk[1][2],flag=self.flag)
 
@@ -269,7 +269,6 @@ class PlotMapping():
 
         self.CalcPlot.PlotFasta(self.ax[0])
         self.CalcPlot.PlotFasta(self.ax[1])
-        i=self.mapping.split('/')[-1].split('Aligned')[0]
 
 
     def PlotNuc(self):
@@ -286,7 +285,7 @@ class PlotMapping():
                 continue
             else:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
-                self.CalcPlot.AxSet(self.ax,chunk[1][1],chunk[1][2])
+                self.CalcPlot.AxSet(self.ax,chunk[1][1],chunk[1][2],vcf=self.vcf)
                 self.ax.spines['bottom'].set_visible(False)
                 self.CalcPlot.PlotNucChunk(d,self.ax,chunk[1][1],chunk[1][2],flag=self.flag)
                 continue

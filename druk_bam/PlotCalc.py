@@ -253,6 +253,18 @@ class CalcPlot():
             drawChunk=[]
             if self.fasta != 'None':
                 ax.scatter([x+s for x in range(0,len(chunk_cigarstring))],len(chunk_cigarstring)*[y], marker='o',s=self.markersize,color=self.colorDict['dot'])
+
+            fontDict={'A':r'$\mathtt{A}$','C':r'$\mathtt{C}$','G':r'$\mathtt{G}$','T':r'$\mathtt{T}$','-':r'$\mathtt{-}$'}
+            xs=[x+s for x in range(0,len(chunk_cigarstring))]
+            ys=len(chunk_cigarstring)*[y]
+            if self.fasta=='None':
+            #    ax.scatter([x+s for x in range(0,len(chunk_cigarstring))],len(chunk_cigarstring)*[y], marker='$A{Monospace}$')
+                for _ in ['A','C','T','G','-']:
+                    xp=[x for x,nuc in zip(xs,query_alignment_sequence) if nuc == _]
+                    yp=[y for y,nuc in zip(ys,query_alignment_sequence) if nuc == _]
+                    ax.scatter(xp,yp,marker=fontDict[_],lw=0,color=self.colorDict[_],s=4)
+                continue
+
             for p,alignPos in enumerate(chunk_cigarstring):
 
                 x=s+p
@@ -278,8 +290,9 @@ class CalcPlot():
                             fastapos=fastapos+1
                             continue
                         else:
-                            ax.text(x,y,query_alignment_sequence[p],fontsize=self.Fontsize,
-                                color=self.colorDict[query_alignment_sequence[p]],alpha=alpha,family='monospace',ha='center',va='center')
+                            ax.scatter((x,y),marker="$A$")
+                            #ax.text(x,y,query_alignment_sequence[p],fontsize=self.Fontsize,
+                            #    color=self.colorDict[query_alignment_sequence[p]],alpha=alpha,family='monospace',ha='center',va='center')
             #    if alignPos=='M':
             #        if self.fasta != 'None' and fastaChunk[fastapos]==query_alignment_sequence[p]:
             #            if fastapos<len(fastaChunk)&p<len(query_alignment_sequenceand) and [fastapos+1]==query_alignment_sequence[p+1]:

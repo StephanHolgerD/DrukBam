@@ -22,15 +22,16 @@ class CalcMapping():
             for record in tqdm(s.fetch(str(chrom),start,end,until_eof=True)):
                 #print(df)
                 #print(list(df))
-                if record.reference_start>=start and record.reference_end<end:
-                    if df.loc[self.maxHeight,start:end].sum()>=((self.end-self.start)*0.9):
-                        print('hardbreak')
-                        break
 
-                    if df.loc[self.maxHeight+50-1,record.reference_start:record.reference_end].sum()>=((record.reference_end-record.reference_start)*0.9):
-                        continue
 
                 if not record.is_unmapped:
+                    if record.reference_start>=start and record.reference_end<end:
+                        if df.loc[self.maxHeight,start:end].sum()>=((self.end-self.start)*0.9):
+                            print('hardbreak')
+                            break
+
+                        if df.loc[self.maxHeight+50-1,record.reference_start:record.reference_end].sum()>=((record.reference_end-record.reference_start)*0.9):
+                            continue
                     for _ in range(record.reference_start,record.reference_end+1):
                         if _ not in list(df):
                             df[_]=0

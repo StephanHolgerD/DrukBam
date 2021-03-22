@@ -208,14 +208,10 @@ class CalcPlot():
             e=e+1
             s=s+1
             if y>self.maxHeight:
-                for _ in range(s,e+1):
-                    plotC.add(_)
-                if plotC==set(list(range(start,end+1))):
-                    return
                 ax.plot((s,e),(self.maxHeight+1,self.maxHeight+1),color=self.colorDict['max coverage'],alpha=0.1)
                 continue
+
             chunk_cigarstring=self.CigChunker(cig)
-            temp_cig=chunk_cigarstring
             query_alignment_sequence=qS
             chunkL=len(chunk_cigarstring)
             chunk_cigarstringS=[x for x in chunk_cigarstring if x =='S' or x =='H']
@@ -225,6 +221,7 @@ class CalcPlot():
             ipos=self.listConsec(ipos)
             chunk_cigarstring=[x for x in chunk_cigarstring if x !='I']
             iposCounter=0
+
             for i in ipos:
                 query_alignment_sequence="".join([x for _,x in enumerate(query_alignment_sequence) if _+iposCounter not in i])
                 iposCounter=iposCounter+len(i)
@@ -251,22 +248,23 @@ class CalcPlot():
                     alpha=0.3
             fastapos=0
             drawChunk=[]
-            if self.fasta != 'None':
-                ax.scatter([x+s for x in range(0,len(chunk_cigarstring))],len(chunk_cigarstring)*[y], marker='o',s=self.markersize,color=self.colorDict['dot'])
+
+
 
             fontDict={'A':r'$\mathtt{A}$','C':r'$\mathtt{C}$','G':r'$\mathtt{G}$','T':r'$\mathtt{T}$','-':r'$\mathtt{-}$'}
             xs=[x+s for x in range(0,len(chunk_cigarstring))]
             ys=len(chunk_cigarstring)*[y]
             if self.fasta=='None':
-            #    ax.scatter([x+s for x in range(0,len(chunk_cigarstring))],len(chunk_cigarstring)*[y], marker='$A{Monospace}$')
                 for _ in ['A','C','T','G','-']:
                     xp=[x for x,nuc in zip(xs,query_alignment_sequence) if nuc == _]
                     yp=[y for y,nuc in zip(ys,query_alignment_sequence) if nuc == _]
-                    ax.scatter(xp,yp,marker=fontDict[_],lw=0,color=self.colorDict[_],s=4)
+                    ax.scatter(xp,yp,marker=fontDict[_],lw=0,color=self.colorDict[_],s=4,alpha=alpha)
                 continue
 
-            for p,alignPos in enumerate(chunk_cigarstring):
+            if self.fasta != 'None':
+                ax.scatter([x+s for x in range(0,len(chunk_cigarstring))],len(chunk_cigarstring)*[y], marker='o',s=self.markersize,color=self.colorDict['dot'],alpha=alpha)
 
+            for p,alignPos in enumerate(chunk_cigarstring):
                 x=s+p
                 if x>self.end:
                     continue
@@ -279,9 +277,6 @@ class CalcPlot():
                     if self.fasta != 'None' and fastaChunk[fastapos]==query_alignment_sequence[p]:
                         fastapos=fastapos+1
                         continue
-                        #ax.plot(x,y,color='black', markersize=0.5,marker='o')
-                        #fastapos=fastapos+1
-                        #continue
                     else:
                         if self.fasta != 'None':
                             ax.text(x,y,query_alignment_sequence[p],fontsize=self.Fontsize,
@@ -289,36 +284,10 @@ class CalcPlot():
                                 bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=self.colorDict[query_alignment_sequence[p]], ec='none'))
                             fastapos=fastapos+1
                             continue
-                        else:
-                            ax.scatter((x,y),marker="$A$")
-                            #ax.text(x,y,query_alignment_sequence[p],fontsize=self.Fontsize,
-                            #    color=self.colorDict[query_alignment_sequence[p]],alpha=alpha,family='monospace',ha='center',va='center')
-            #    if alignPos=='M':
-            #        if self.fasta != 'None' and fastaChunk[fastapos]==query_alignment_sequence[p]:
-            #            if fastapos<len(fastaChunk)&p<len(query_alignment_sequenceand) and [fastapos+1]==query_alignment_sequence[p+1]:
-            #                drawChunk.append('.')
-            #                fastapos=fastapos+1
-            #                continue
-            #            else:
-            #                x=x-len(drawChunk)
-            #                drawChunk.append('.')
-            #                ax.text(x,y,''.join(drawChunk),fontsize=self.Fontsize,
-            #                    color='black',alpha=alpha,family='monospace',ha='center',va='center')
-            #                fastapos=fastapos+1
-            #                drawChunk=[]
-            #                continue
-            #        else:
-            #            ax.text(x,y,query_alignment_sequence[p],fontsize=self.Fontsize,
-            #                color=self.colorDict[query_alignment_sequence[p]],alpha=alpha,family='monospace',ha='center',va='center')
-                        #ax.text(x,y,query_alignment_sequence[p],fontsize=self.Fontsize,
-                        #    color='black',alpha=alpha,family='monospace',ha='center',va='center',
-                        #    bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=self.colorDict[query_alignment_sequence[p]], ec='none'))
-            #            fastapos=fastapos+1
-            #            continue
 
                 if alignPos=='D':
                     ax.text(x,y,query_alignment_sequence[p], fontsize=self.Fontsize,ha='center',va='center',family='monospace',
-                            color=self.colorDict['gap font'],bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=self.colorDict['gap background'], ec='darkgrey',linewidth=0.00001))
+                            color=self.colorDict['-'],bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=self.colorDict['gap background'], ec='darkgrey',linewidth=0.00001))
                     fastapos=fastapos+1
                     continue
 

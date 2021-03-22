@@ -8,7 +8,7 @@ from druk_bam.PlotCalc import CalcPlot
 import sys
 class PlotMapping():
     def __init__(self,mapping,chrom,start,end,coverage=200,flag='None',direction=False,schematic=False,chunksize=1000,threads=1,fasta=None,output='current working directory',
-    out_name='name of mapping',vcf=False,style='classic'):
+    out_name='name of mapping',vcf=False,style='classic',outfmt='pdf'):
         self.outputdir=output
         self.out_name=out_name
         self.mapping=mapping
@@ -31,7 +31,8 @@ class PlotMapping():
         self.CalcMapping=CalcMapping(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads)
         self.CalcPlot=CalcPlot(mapping,chrom,self.start,self.end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,fasta=self.fasta,style=self.style)
         self.vcf=vcf
-    def savePlot(self,schmematic=False,direction=False,reference=None):
+        self.outfmt=outfmt
+    def savePlot(self,schmematic=False,direction=False,reference=False):
         if self.out_name=='name of mapping':
             o=self.mapping.split('/')[-1]
         else:
@@ -43,14 +44,14 @@ class PlotMapping():
         r=''
         d=''
         s=''
-        if schmematic!=None:
+        if schmematic:
             r='S'
-        if direction!=None:
+        if direction:
             d='D'
-        if reference!=None:
+        if reference:
             r='R'
 
-        self.fig.savefig('{}/{}_{}_{}_{}{}{}{}.pdf'.format(od,o,self.chrom,str(self.start),str(self.end),s,d,r),bbox_inches='tight')
+        self.fig.savefig('{}/{}_{}_{}_{}{}{}{}.{}'.format(od,o,self.chrom,str(self.start),str(self.end),s,d,r,self.outfmt),bbox_inches='tight',dpi=400)
         #plt.close()
 
     def Plot(self):

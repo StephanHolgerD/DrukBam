@@ -36,6 +36,7 @@ optArguments.add_argument('--fasta',default='None', help='fasta file for referen
 optArguments.add_argument('--outputdir',default='current working directory', help='directory for output')
 optArguments.add_argument('-i','--id',default='name of mapping', help='output filename')
 optArguments.add_argument('--chunksize',default=1000, help='max size of visualized area, can be increases but will sow down calculation',type=int)
+optArguments.add_argument('--outfmt',default='pdf', help='format of plot, choose between pdf,svg,png')
 
 
 
@@ -51,6 +52,7 @@ optArguments.add_argument('--fasta',default='None', help='fasta file for referen
 optArguments.add_argument('--outputdir',default='current working directory', help='directory for output')
 optArguments.add_argument('-i','--id',default='name of mapping', help='output filename')
 optArguments.add_argument('--chunksize',default=1000, help='max size of visualized area, can be increases but will sow down calculation',type=int)
+optArguments.add_argument('--outfmt',default='pdf', help='format of plot, choose between pdf,svg,png')
 
 
 t=time()
@@ -71,7 +73,8 @@ if args.__contains__('start'):
     out_name=args.id,
     output=args.outputdir,
     chunksize=args.chunksize,
-    style=args.style)
+    style=args.style,
+    outfmt=args.outfmt)
     ploter.Plot()
 if args.__contains__('vcf'):
     print('kob')
@@ -85,6 +88,7 @@ if args.__contains__('vcf'):
     output=args.outputdir,
     padding=args.padding,
     chunksize=args.chunksize,
-    style=args.style)
+    style=args.style,
+    outfmt=args.outfmt)
     ploter.MultiPlot()
 print(time()-t)

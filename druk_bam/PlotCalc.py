@@ -7,7 +7,7 @@ import configparser
 import os
 import sys
 class CalcPlot():
-    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000, fasta=None,style='classic'):
+    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000, fasta=None,style='classic',readoutline=True):
         self.mapping=mapping
         self.chrom=chrom
         self.start=start
@@ -18,6 +18,7 @@ class CalcPlot():
         self.flag=flag
         self.chunksize=chunksize
         self.fasta = fasta
+        self.readoutline=readoutline
         config = configparser.ConfigParser()
         if style!=None:
             if os.path.isfile(style):
@@ -45,6 +46,8 @@ class CalcPlot():
     def startPlot(self,cols,direction,schematic):
 
         self.cols=cols
+        self.innerLW=0
+        self.LW=0.2
         if not direction and not schematic:
             if cols==1:
                 if self.end-self.start <=100:
@@ -196,10 +199,13 @@ class CalcPlot():
                 retL.append(l[c:e+1])
                 c=e+1
         return(retL)
-
     def PlotNucChunk(self,df,ax,start,end,flag='None'):
 
+
+
         plotC=set()
+        #if self.readoutline:
+    #        self.plotChunk(df,ax,self.start,self.end)
         df['y']=df['y']+1
         for y,s,e,d,qS,cig,mate in zip(df['y'],df['start'],df['end'],df['direction'],df['qSeq'],df['cigar'],df['mateMap']):
             if self.fasta != 'None':
@@ -250,6 +256,9 @@ class CalcPlot():
             drawChunk=[]
 
 
+            if self.readoutline:
+                ax.plot((s,s+len(query_alignment_sequence)-1),(y,y),color='black',linewidth=2.6,zorder=0)
+                ax.plot((s+0.1,s+len(query_alignment_sequence)-1-0.1),(y,y),color='darkgrey',linewidth=2.2,alpha=0.5,zorder=0)
 
             fontDict={'A':r'$\mathtt{A}$','C':r'$\mathtt{C}$','G':r'$\mathtt{G}$','T':r'$\mathtt{T}$','-':r'$\mathtt{-}$'}
             xs=[x+s for x in range(0,len(chunk_cigarstring))]

@@ -2,13 +2,13 @@ import pysam
 import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from multiprocess import Pool
+from multiprocessing import Pool
 from druk_bam.bamCalc import CalcMapping
 from druk_bam.PlotCalc import CalcPlot
 import sys
 class PlotMapping():
     def __init__(self,mapping,chrom,start,end,coverage=200,flag='None',direction=False,schematic=False,chunksize=1000,threads=1,fasta=None,output='current working directory',
-    out_name='name of mapping',vcf=False,style='classic',outfmt='pdf'):
+    out_name='name of mapping',vcf=False,style='classic',outfmt='pdf',outlineoff=False):
         self.outputdir=output
         self.out_name=out_name
         self.mapping=mapping
@@ -29,7 +29,7 @@ class PlotMapping():
         self.fasta=fasta
         self.style=style
         self.CalcMapping=CalcMapping(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads)
-        self.CalcPlot=CalcPlot(mapping,chrom,self.start,self.end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,fasta=self.fasta,style=self.style)
+        self.CalcPlot=CalcPlot(mapping,chrom,self.start,self.end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,fasta=self.fasta,style=self.style,outlineoff=outlineoff)
         self.vcf=vcf
         self.outfmt=outfmt
     def savePlot(self,schmematic=False,direction=False,reference=False):
@@ -48,7 +48,7 @@ class PlotMapping():
             r='S'
         if direction:
             d='D'
-        if reference:
+        if reference != 'None':
             r='R'
 
         self.fig.savefig('{}/{}_{}_{}_{}{}{}{}.{}'.format(od,o,self.chrom,str(self.start),str(self.end),s,d,r,self.outfmt),bbox_inches='tight',dpi=400)
@@ -64,10 +64,16 @@ class PlotMapping():
             self.savePlot(schmematic=True,direction=True)
             return
         if self.direction and not self.schematic:
+            if (self.end - self.start) > self.chunksize:
+                print('span larger than chunksize, please increase chunksize, calc. speed will slow down with large chunksizes')
+                sys.exit()
             self.PlotNucDir()
             self.savePlot(direction=True,reference=self.fasta)
             return
         if not self.direction and not self.schematic:
+            if (self.end - self.start) > self.chunksize:
+                print('span larger than chunksize, please increase chunksize, calc. speed will slow down with large chunksizes')
+                sys.exit()
             self.PlotNuc()
             self.savePlot(reference=self.fasta)
             return

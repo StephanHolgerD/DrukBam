@@ -6,8 +6,9 @@ from multiprocessing import Pool
 import configparser
 import os
 import sys
+import matplotlib.patches as patches
 class CalcPlot():
-    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000, fasta=None,style='classic',readoutline=True):
+    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000, fasta=None,style='classic',outlineoff=False):
         self.mapping=mapping
         self.chrom=chrom
         self.start=start
@@ -18,7 +19,7 @@ class CalcPlot():
         self.flag=flag
         self.chunksize=chunksize
         self.fasta = fasta
-        self.readoutline=readoutline
+        self.outlineoff=outlineoff
         config = configparser.ConfigParser()
         if style!=None:
             if os.path.isfile(style):
@@ -200,9 +201,6 @@ class CalcPlot():
                 c=e+1
         return(retL)
     def PlotNucChunk(self,df,ax,start,end,flag='None'):
-
-
-
         plotC=set()
         #if self.readoutline:
     #        self.plotChunk(df,ax,self.start,self.end)
@@ -254,9 +252,7 @@ class CalcPlot():
                     alpha=0.3
             fastapos=0
             drawChunk=[]
-
-
-            if self.readoutline:
+            if not self.outlineoff:
                 ax.plot((s,s+len(query_alignment_sequence)-1),(y,y),color='black',linewidth=2.6,zorder=0)
                 ax.plot((s+0.1,s+len(query_alignment_sequence)-1-0.1),(y,y),color='darkgrey',linewidth=2.2,alpha=0.5,zorder=0)
 
@@ -289,8 +285,13 @@ class CalcPlot():
                     else:
                         if self.fasta != 'None':
                             ax.text(x,y,query_alignment_sequence[p],fontsize=self.Fontsize,
-                                color=self.colorDict['nuc missmatch font'],alpha=alpha,family='monospace',ha='center',va='center',
-                                bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=self.colorDict[query_alignment_sequence[p]], ec='none'))
+                                color=self.colorDict['nuc missmatch font'],alpha=alpha,family='monospace',ha='center',va='center_baseline',zorder=2
+                                )
+                                #bbox=dict(alpha=alpha,boxstyle='square,pad=0.1' ,fc=self.colorDict[query_alignment_sequence[p]], ec='none')
+                            rect = patches.Rectangle((x-0.45, y-0.5),
+                            1,1,edgecolor='none',facecolor=self.colorDict[query_alignment_sequence[p]],zorder=1)
+# add rectangle to plot
+                            ax.add_patch(rect)
                             fastapos=fastapos+1
                             continue
 

@@ -2,7 +2,7 @@ import pysam
 import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from multiprocessing import Pool
+from multiprocess import Pool
 from druk_bam.bamCalc import CalcMapping
 from druk_bam.PlotCalc import CalcPlot
 import sys
@@ -52,7 +52,7 @@ class PlotMapping():
             r='R'
 
         self.fig.savefig('{}/{}_{}_{}_{}{}{}{}.{}'.format(od,o,self.chrom,str(self.start),str(self.end),s,d,r,self.outfmt),bbox_inches='tight',dpi=400)
-        #plt.close()
+        plt.close()
 
     def Plot(self):
         if self.schematic and not self.direction:

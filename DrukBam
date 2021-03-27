@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import argparse
 import sys
 from druk_bam.MapPlot import PlotMapping
@@ -30,12 +31,14 @@ optArguments.add_argument('--maxcoverage',default=200, help="max cov to plot",ty
 optArguments.add_argument('--direction',default=False,action='store_true', help="split reads by forward and reverse")
 optArguments.add_argument('--schematic',default=False,action='store_true', help='plot no nucleotide, recommended for ROI>1000')
 optArguments.add_argument('--style',default=None, help='different style options for the plot, provide .ini file')
-optArguments.add_argument('--flag',default='None', help='different style options for the plot, def:classic',choices=['None','MateUnmapped','SoftClipped','MateUnmappedSoftClipped','Insertion'])
+#optArguments.add_argument('--flag',default='None', help='different style options for the plot, def:classic',choices=['None','MateUnmapped','SoftClipped','MateUnmappedSoftClipped','Insertion'])
 optArguments.add_argument('--fasta',default='None', help='fasta file for reference related plotting')
 optArguments.add_argument('--outputdir',default='current working directory', help='directory for output')
 optArguments.add_argument('-i','--id',default='name of mapping', help='output filename')
 optArguments.add_argument('--chunksize',default=1000, help='max size of visualized area, can be increases but will sow down calculation',type=int)
 optArguments.add_argument('--outfmt',default='pdf', help='format of plot, choose between pdf,svg,png')
+optArguments.add_argument('--outlineoff',default=False, help='plotting of read outline',action='store_true')
+
 
 
 
@@ -46,12 +49,13 @@ optArguments.add_argument('--maxcoverage',default=200, help="max cov to plot",ty
 optArguments.add_argument('--direction',default=False,action='store_true', help="split reads by forward and reverse")
 optArguments.add_argument('--schematic',default=False,action='store_true', help='plot no nucleotide, recommended for ROI>1000')
 optArguments.add_argument('--style',default=None, help='different style options for the plot, provide .ini file')
-optArguments.add_argument('--flag',default='None', help='different style options for the plot, def:classic',choices=['None','MateUnmapped','SoftClipped','MateUnmappedSoftClipped','Insertion'])
+#optArguments.add_argument('--flag',default='None', help='different style options for the plot, def:classic',choices=['None','MateUnmapped','SoftClipped','MateUnmappedSoftClipped','Insertion'])
 optArguments.add_argument('--fasta',default='None', help='fasta file for reference related plotting')
 optArguments.add_argument('--outputdir',default='current working directory', help='directory for output')
 optArguments.add_argument('-i','--id',default='name of mapping', help='output filename')
 optArguments.add_argument('--chunksize',default=1000, help='max size of visualized area, can be increases but will sow down calculation',type=int)
 optArguments.add_argument('--outfmt',default='pdf', help='format of plot, choose between pdf,svg,png')
+optArguments.add_argument('--outlineoff',default=False, help='plotting of read outline',action='store_true')
 
 
 t=time()
@@ -64,7 +68,6 @@ if args.__contains__('start'):
     ploter=PlotMapping(args.bam,args.chromosome,
     int(args.start),
     int(args.end),
-    flag=args.flag,
     schematic=args.schematic,
     direction=args.direction,
     coverage=args.maxcoverage,threads=args.threads,
@@ -73,12 +76,11 @@ if args.__contains__('start'):
     output=args.outputdir,
     chunksize=args.chunksize,
     style=args.style,
-    outfmt=args.outfmt)
+    outfmt=args.outfmt,
+    outlineoff=args.outlineoff)
     ploter.Plot()
 if args.__contains__('vcf'):
-    print('kob')
     ploter=VcfPlotter(args.vcf,args.bam,
-    flag=args.flag,
     schematic=args.schematic,
     direction=args.direction,
     coverage=args.maxcoverage,threads=args.threads,
@@ -88,6 +90,7 @@ if args.__contains__('vcf'):
     padding=args.padding,
     chunksize=args.chunksize,
     style=args.style,
-    outfmt=args.outfmt)
+    outfmt=args.outfmt,
+    outlineoff=args.outlineoff)
     ploter.MultiPlot()
 print(time()-t)

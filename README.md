@@ -3,6 +3,7 @@
 
 ## reference free
 <center><img src="exampleOutput/example_refFreeDirection_19_281367_281468.png" width="100%"/></center>
+
 ## including a reference
 <center><img src="exampleOutput/example_refFreeDirection_19_281367_281468R.png" width="100%"/></center>
 

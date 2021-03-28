@@ -112,6 +112,7 @@ optional arguments:
 
 ```
 
+
 ## Examples:
 
 Samplot requires either BAM files or CRAM files as primary input. If you use
@@ -125,42 +126,29 @@ to that same region in two unrelated samples NA12889 and NA12890.
 
 The following command will create an image of that region:
 ```
-time samplot plot \
-    -n NA12878 NA12889 NA12890 \
-    -b samplot/test/data/NA12878_restricted.bam \
-      samplot/test/data/NA12889_restricted.bam \
-      samplot/test/data/NA12890_restricted.bam \
-    -o 4_115928726_115931880.png \
-    -c chr4 \
-    -s 115928726 \
-    -e 115931880 \
-    -t DEL
-
-real	0m3.882s
-user	0m3.831s
-sys	0m0.328s
-
+DrukBam region  -s 281367 -e 281468   -c 19 -b test_data/test_small.bam  --outfmt png  -i example_refFreeDirection --maxcoverage 60 --outlineoff --fasta test_data/chr19_first500k.fasta
 ```
 
 The arguments used above are:
 
-`-n` The names to be shown for each sample in the plot
+`-s` start of ROI
 
-`-b` The BAM/CRAM files of the samples (space-delimited)
+`-e` end of ROI
 
-`-o` The name of the output file containing the plot
+`-c` chromosome of ROI
 
-`-c` The chromosome of the region of interest
 
-`-s` The start location of the region of interest
+`-b` alignment file, sorted and index
 
-`-e` The end location of the region of interest
+`--outfmt` format of plot
 
-`-t` The type of the variant of interest
+`-i` ID which is used for naming the plot
 
-This will create an image file named `4_115928726_115931880.png`, shown below:
+`--maxcoverage` yaxis max of plot
 
-<img src="/doc/imgs/4_115928726_115931880.png">
+`--outlineoff` dont draw outlines around every read
+
+`--fasta` location of ref. fasta
 
 ### Gene and other genomic feature annotations
 

@@ -1,0 +1,5 @@
+pandas
+matplotlib
+pysam
+multiprocessing
+tqdm

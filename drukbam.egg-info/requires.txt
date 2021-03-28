@@ -1,0 +1,4 @@
+pandas
+pysam
+tqdm
+matplotlib

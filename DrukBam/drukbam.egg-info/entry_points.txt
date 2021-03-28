@@ -1,0 +1,3 @@
+[console_scripts]
+DrukBam = DrukBam.__main__:main
+

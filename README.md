@@ -1,8 +1,19 @@
-<center><img src="/exampleOutput/example_refFree_19_281367_281568.png" width="300"/></center>
-
-<center><img src="/exampleOutput/example_refFree_19_281367_281568.png" width="100%"/></center>
-
+#DrukBam
 `DrukBam` is a straight forward program for plotting alignment files without leaving the commandline. It can be used with or without a reference fasta file and allows fast plotting multiple variants or regions of interest.
+
+## reference free
+<center><img src="exampleOutput/example_refFreeDirection_19_281367_281468.png" width="100%"/></center>
+## including a reference
+<center><img src="exampleOutput/example_refFreeDirection_19_281367_281468R.png" width="100%"/></center>
+
+## split by read direction
+<center><img src="exampleOutput/example_refFreeDirection_19_281367_281568D.png" width="100%"/></center>
+
+
+## bigger span
+<center><img src="exampleOutput/example_refFreeDirection_19_281067_282568DR.png" width="100%"/></center>
+
+
 
 
 # Usage

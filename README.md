@@ -1,4 +1,4 @@
-#DrukBam
+# DrukBam
 `DrukBam` is a straight forward program for plotting alignment files without leaving the commandline. It can be used with or without a reference fasta file and allows fast plotting multiple variants or regions of interest.
 
 ## reference free

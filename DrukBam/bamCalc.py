@@ -5,7 +5,7 @@ from tqdm import tqdm
 from multiprocessing import Pool
 
 class CalcMapping():
-    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None'):
+    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000):
         self.mapping=mapping
         self.chrom=chrom
         self.start=start-1
@@ -14,8 +14,9 @@ class CalcMapping():
         self.Fontsize=3
         self.threads=threads
         self.flag=flag
+        self.chunksize=chunksize
 
-    def plotList(self,chrom,start,end):
+    def plotList(self,chrom,start,end,forwardOnly,reverseOnly):
         df=pd.DataFrame(0,index=range(0,self.maxHeight+50),columns=range(start,end+1))
         plotList=[]
         with pysam.AlignmentFile(self.mapping) as s:
@@ -25,26 +26,37 @@ class CalcMapping():
 
 
                 if not record.is_unmapped:
-                    if record.reference_start>=start and record.reference_end<end:
-                        if df.loc[self.maxHeight,start:end].sum()>=((self.end-self.start)*0.9):
-                            print('hardbreak')
-                            break
-
-                        if df.loc[self.maxHeight+50-1,record.reference_start:record.reference_end].sum()>=((record.reference_end-record.reference_start)*0.9):
+                    if record.is_reverse:
+                        if forwardOnly:
                             continue
-                    for _ in range(record.reference_start,record.reference_end+1):
-                        if _ not in list(df):
-                            df[_]=0
-                    if sum(df[range(record.reference_start,record.reference_end+1)].sum(axis=1)) == 0:
-                        for _ in range(record.reference_start,record.reference_end+1):
+                    if not record.is_reverse:
+                        if reverseOnly:
+                            continue
+
+                #    if record.reference_start>=start and record.reference_end<end:
+                #        if df.loc[self.maxHeight,start:end].sum()>=((self.end-self.start)*0.9):
+                #            print('hardbreak')
+                #            break
+
+                #        if df.loc[self.maxHeight+50-1,record.reference_start:record.reference_end].sum()>=((record.reference_end-record.reference_start)*0.9):
+                #            continue
+                    endPos=record.reference_end
+                    if record.reference_end>=end:
+                        endPos=end
+                    if sum(df[range(record.reference_start,endPos+1)].sum(axis=1)) == 0:
+                        for _ in range(record.reference_start,endPos+1):
+                            if _ >=(end):
+                                continue
                             df.at[0,_]=1
                         if record.is_reverse:
+
                             plotList.append((0,record.reference_start,record.reference_end,'r',
                                              record.qname+'_R',
                                              record.query_alignment_sequence,
                                              record.cigarstring,
                                              record.mate_is_unmapped))
                         if not record.is_reverse:
+
                             plotList.append((0,record.reference_start,record.reference_end,'f',
                                              record.qname+'_F',
                                              record.query_alignment_sequence,
@@ -53,18 +65,21 @@ class CalcMapping():
 
 
                     else:
-                        for p,v in enumerate(list(df[range(record.reference_start,record.reference_end+1)].sum(axis=1))):
+
+                        for p,v in enumerate(list(df[range(record.reference_start,endPos+1)].sum(axis=1))):
                             if v ==0:
-                                for _ in range(record.reference_start,record.reference_end+1):
+                                for _ in range(record.reference_start,endPos+1):
                                     df.at[p,_]=1
 
                                 if record.is_reverse:
+
                                     plotList.append((p,record.reference_start,record.reference_end,'r',
                                                      record.qname+'_R',
                                                      record.query_alignment_sequence,
                                                      record.cigarstring,
                                                      record.mate_is_unmapped))
                                 if not record.is_reverse:
+
                                     plotList.append((p,record.reference_start,record.reference_end,'f',
                                                      record.qname+'_F',
                                                      record.query_alignment_sequence,
@@ -85,11 +100,12 @@ class CalcMapping():
                     #record.reference_end=record.reference_end+1
                     #print(record.reference_start)
                     #print('e')
-                    for _ in range(record.reference_start,record.reference_end):
+                    for _ in range(record.reference_start,record.reference_start+self.chunk_size+100):
                         if _ not in list(df):
                             df[_]=0
                     if sum(df[range(record.reference_start,record.reference_end)].sum(axis=1)) == 0:
                         for _ in range(record.reference_start,record.reference_end):
+
                             df.at[0,_]=1
 
                         plotList.append((0,record.reference_start,record.reference_end,'r',
@@ -143,6 +159,7 @@ class CalcMapping():
                                                      record.cigarstring,
                                                      record.mate_is_unmapped))
                                 break
+
         return plotList
 
 

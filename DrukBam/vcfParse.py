@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from multiprocessing import Pool
-from DrukBam.MapPlot import PlotMapping
+from MapPlot import PlotMapping
 import sys
 from time import time
 class VcfPlotter():

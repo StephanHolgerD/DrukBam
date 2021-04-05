@@ -3,8 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from multiprocessing import Pool
-from DrukBam.bamCalc import CalcMapping
-from DrukBam.PlotCalc import CalcPlot
+from bamCalc import CalcMapping
+from PlotCalc import CalcPlot
 import sys
 class PlotMapping():
     def __init__(self,mapping,chrom,start,end,coverage=200,flag='None',direction=False,schematic=False,chunksize=1000,threads=1,fasta=None,output='current working directory',
@@ -28,7 +28,7 @@ class PlotMapping():
         self.threads=threads
         self.fasta=fasta
         self.style=style
-        self.CalcMapping=CalcMapping(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads)
+        self.CalcMapping=CalcMapping(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,chunksize=chunksize)
         self.CalcPlot=CalcPlot(mapping,chrom,self.start,self.end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,fasta=self.fasta,style=self.style,outlineoff=outlineoff)
         self.vcf=vcf
         self.outfmt=outfmt
@@ -85,17 +85,17 @@ class PlotMapping():
         start=self.start
         end=self.start+self.chunksize
         if span<self.chunksize:
-            results=[self.CalcMapping.plotListFRWRD(self.chrom,self.start,self.end)]
-            multi.append((self.chrom,self.start,self.end))
+            results=[self.CalcMapping.plotList(self.chrom,self.start,self.end,True,False)]
+            multi.append((self.chrom,self.start,self.end,True,False))
         else:
             for _ in range(0,int(span/self.chunksize)):
-                multi.append((self.chrom,start,end))
+                multi.append((self.chrom,start,end,True,False))
                 start=end
                 end=end+self.chunksize
             if span/self.chunksize - int(span/self.chunksize)!=0:
-                multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
+                multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize)),True,False))
             with Pool(processes=self.threads) as pool:
-                results = pool.starmap(self.CalcMapping.plotListFRWRD, multi)
+                results = pool.starmap(self.CalcMapping.plotList, multi)
         return results,multi
 
     def CalcRVRS(self):
@@ -104,17 +104,17 @@ class PlotMapping():
         start=self.start
         end=self.start+self.chunksize
         if span<self.chunksize:
-            results=[self.CalcMapping.plotListRVRS(self.chrom,self.start,self.end)]
-            multi.append((self.chrom,self.start,self.end))
+            results=[self.CalcMapping.plotList(self.chrom,self.start,self.end,False,True)]
+            multi.append((self.chrom,self.start,self.end,False,True))
         else:
             for _ in range(0,int(span/self.chunksize)):
-                multi.append((self.chrom,start,end))
+                multi.append((self.chrom,start,end,False,True))
                 start=end
                 end=end+self.chunksize
             if span/self.chunksize - int(span/self.chunksize)!=0:
-                multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
+                multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize)),False,True))
             with Pool(processes=self.threads) as pool:
-                results = pool.starmap(self.CalcMapping.plotListRVRS, multi)
+                results = pool.starmap(self.CalcMapping.plotList, multi)
         return results,multi
 
     def Calc(self):
@@ -123,15 +123,15 @@ class PlotMapping():
         start=self.start
         end=self.start+self.chunksize
         if span < self.chunksize:
-            results=[self.CalcMapping.plotList(self.chrom,self.start,self.end)]
-            multi.append((self.chrom,self.start,self.end))
+            results=[self.CalcMapping.plotList(self.chrom,self.start,self.end,False,False)]
+            multi.append((self.chrom,self.start,self.end,False,False))
         else:
             for _ in range(0,int(span/self.chunksize)):
-                multi.append((self.chrom,start,end))
+                multi.append((self.chrom,start,end,False,False))
                 start=end
                 end=end+self.chunksize
             if span/self.chunksize - int(span/self.chunksize)!=0:
-                multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize))))
+                multi.append((self.chrom,start,int(start+((span/self.chunksize - int(span/self.chunksize))*self.chunksize)),False,False))
             with Pool(processes=self.threads) as pool:
                 results = pool.starmap(self.CalcMapping.plotList, multi)
         return results,multi
@@ -249,6 +249,7 @@ class PlotMapping():
 
             if len(resultsR)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
+                d.to_csv('rev.tsv',sep='\t')
                 self.CalcPlot.AxSet(self.ax[0],chunk[1][1],chunk[1][2], direction=direction,vcf=self.vcf)
 
                 self.CalcPlot.PlotNucChunk(d,self.ax[0],chunk[1][1],chunk[1][2],flag=self.flag)
@@ -266,6 +267,8 @@ class PlotMapping():
 
             if len(resultsF)==1:
                 d=pd.DataFrame(chunk[0],columns=['y','start','end','direction','name','qSeq','cigar','mateMap'])
+                d.to_csv('for.tsv',sep='\t')
+
                 self.ax[1].spines['bottom'].set_visible(False)
                 self.CalcPlot.AxSet(self.ax[1],chunk[1][1],chunk[1][2], direction=direction,vcf=self.vcf)
 

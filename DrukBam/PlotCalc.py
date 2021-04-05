@@ -231,7 +231,7 @@ class CalcPlot():
                 iposCounter=iposCounter+len(i)
 
             for p,_ in enumerate(chunk_cigarstring):
-                if _=='D':
+                if _=='D' or _=='N':
                     qs1=query_alignment_sequence[:p]
                     qs2=query_alignment_sequence[p:]
                     query_alignment_sequence=qs1+'-'+qs2
@@ -277,6 +277,11 @@ class CalcPlot():
                     fastapos=fastapos+1
                     continue
                 if alignPos=='S':
+                    continue
+                if alignPos=='N':
+                    ax.text(x,y,query_alignment_sequence[p], fontsize=self.Fontsize,ha='center',va='center',family='monospace',
+                            color=self.colorDict['-'],bbox=dict(alpha=alpha,boxstyle='square,pad=0', fc=self.colorDict['gap background'], ec='darkgrey',linewidth=0.00001))
+                    fastapos=fastapos+1
                     continue
                 if alignPos=='M':
                     if self.fasta != 'None' and fastaChunk[fastapos]==query_alignment_sequence[p]:

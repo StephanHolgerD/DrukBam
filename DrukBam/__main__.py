@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-print('lol')
 import argparse
 import sys
 from DrukBam.MapPlot import PlotMapping
 from DrukBam.vcfParse import VcfPlotter
 from time import time
-from importlib import resources
+#from importlib import resources
 def main():
     parser = argparse.ArgumentParser(description='Quick reference free plotting of bam file')
     subparsers = parser.add_subparsers(help='plot variants from vcf file with padding / plot region')

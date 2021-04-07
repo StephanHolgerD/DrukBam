@@ -43,8 +43,11 @@ class CalcMapping():
                     endPos=record.reference_end
                     if record.reference_end>=end:
                         endPos=end
-                    if sum(df[range(record.reference_start,endPos+1)].sum(axis=1)) == 0:
-                        for _ in range(record.reference_start,endPos+1):
+                    startPos=record.reference_start
+                    if record.reference_start<=start:
+                        startPos=start
+                    if sum(df[range(startPos,endPos+1)].sum(axis=1)) == 0:
+                        for _ in range(startPos,endPos+1):
                             if _ >=(end):
                                 continue
                             df.at[0,_]=1
@@ -66,9 +69,9 @@ class CalcMapping():
 
                     else:
 
-                        for p,v in enumerate(list(df[range(record.reference_start,endPos+1)].sum(axis=1))):
+                        for p,v in enumerate(list(df[range(startPos,endPos+1)].sum(axis=1))):
                             if v ==0:
-                                for _ in range(record.reference_start,endPos+1):
+                                for _ in range(startPos,endPos+1):
                                     df.at[p,_]=1
 
                                 if record.is_reverse:

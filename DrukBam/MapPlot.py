@@ -3,8 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from multiprocessing import Pool
-from bamCalc import CalcMapping
-from PlotCalc import CalcPlot
+from DrukBam.bamCalc import CalcMapping
+from DrukBam.PlotCalc import CalcPlot
 import sys
 class PlotMapping():
     def __init__(self,mapping,chrom,start,end,coverage=200,flag='None',direction=False,schematic=False,chunksize=1000,threads=1,fasta=None,output='current working directory',

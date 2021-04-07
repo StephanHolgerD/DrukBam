@@ -10,7 +10,7 @@ from setuptools import setup
 # This call to setup() does all the work
 setup(
     name="drukbam",
-    version="0.2.6",
+    version="0.1",
     description="plots sorted indexed bam files",
     long_description='test',
     long_description_content_type="text/markdown",
@@ -23,9 +23,9 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
-    packages=["DrukBam"],
+    packages=["DrukBamon"],
     include_package_data=True,
-    install_requires=["pandas",'pysam','tqdm','matplotlib'],
+    install_requires=["pandas", "matplotlib",'pysam','multiprocessing','tqdm',],
     entry_points={
         "console_scripts": [
             "DrukBam=DrukBam.__main__:main",

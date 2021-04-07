@@ -3,12 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from multiprocessing import Pool
-from MapPlot import PlotMapping
+from DrukBam.MapPlot import PlotMapping
 import sys
 from time import time
 class VcfPlotter():
     def __init__(self,vcf,mapping,coverage=200,flag='None',chunksize=1000,padding=20,direction=False,schematic=False,threads=1,
-    fasta=None,output='current working directory',out_name='name of mapping',style='classic'):
+    fasta=None,output='current working directory',out_name='name of mapping',style='classic',outfmt='pdf',outlineoff=False):
         self.outputdir=output
         self.out_name=out_name
         self.mapping=mapping
@@ -27,6 +27,8 @@ class VcfPlotter():
         self.fasta=fasta
         self.chunksize=chunksize
         self.style=style
+        self.outfmt=outfmt
+        self.outlineoff=outlineoff
     def PlotV(self,c,s,e):
             ploter=PlotMapping(
                 self.mapping,
@@ -43,12 +45,15 @@ class VcfPlotter():
                 output=self.outputdir,
                 chunksize=self.chunksize,
                 vcf=True,
-                style=self.style)
+                outfmt=self.outfmt,
+                style=self.style,
+                outlineoff=self.outlineoff)
             ploter.Plot()
     def MultiPlot(self):
         multi=[]
         with pysam.VariantFile(self.vcf) as v:
             for record in v:
                 multi.append((record.chrom,(record.pos-self.padding),(record.pos+self.padding)))
+        print(multi)
         with Pool(processes=self.threads) as pool:
             results = pool.starmap(self.PlotV, multi)

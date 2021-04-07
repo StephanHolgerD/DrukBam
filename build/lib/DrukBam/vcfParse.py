@@ -8,7 +8,7 @@ import sys
 from time import time
 class VcfPlotter():
     def __init__(self,vcf,mapping,coverage=200,flag='None',chunksize=1000,padding=20,direction=False,schematic=False,threads=1,
-    fasta=None,output='current working directory',out_name='name of mapping',style='classic'):
+    fasta=None,output='current working directory',out_name='name of mapping',style='classic',outfmt='pdf'):
         self.outputdir=output
         self.out_name=out_name
         self.mapping=mapping

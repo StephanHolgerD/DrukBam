@@ -10,7 +10,7 @@ from setuptools import setup
 # This call to setup() does all the work
 setup(
     name="drukbam",
-    version="0.2.6",
+    version="1.0.0",
     description="plots sorted indexed bam files",
     long_description='test',
     long_description_content_type="text/markdown",

@@ -107,13 +107,43 @@ optional arguments:
 
 
 ## Installing
-`DrukBam` is available via pypi:
 
-```pip install drukbam
+# requiremnts
+
+* pysam
+* pandas
+* matplotlib
+* tqdm
+
+install via pip:
+`
+pip install pysam pandas matplotlib tqdm
+
+`
+
+or via conda:
+
+
+`
+conda install -c conda-forge -c anaconda -c bioconda  matplotlib pandas tqdm pysam pip
+
+`
+
+If you create an virt. enviroment for DrukBam make sure to install pip in this env, otherwise you global pip will be used and DrukBam will be installed in the base env
+
+
+# installation 
+
+currently `DrukBam` is available only via pypi:
+
 ```
+pip install drukbam
+
+```
+A conda env and a docker image will follow
 
 
-## Examples:
+## Usage Examples:
 
 The following command will create an image of that region:
 ```

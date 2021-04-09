@@ -1,5 +1,7 @@
 # DrukBam
-`DrukBam` is a straight forward program for plotting alignment files without leaving the commandline. It can be used with or without a reference fasta file and allows fast plotting multiple variants or regions of interest.
+### `DrukBam` is a  program for plotting alignment files (.bam) for all comandline aficionados. 
+
+DrukBam  can be used with or without a reference fasta file and allows fast plotting multiple variants or regions of interest. Please provide feedback like bugs or options you might miss, I wrote this programm because I did not found a convicning tool to provide fast plotting of alignemnts withput using a GUI like in IGV or Tablet. 
 
 ## reference free
 <center><img src="exampleOutput/example_refFreeDirection_19_281367_281468.png" width="100%"/></center>
@@ -15,6 +17,40 @@
 <center><img src="exampleOutput/example_refFreeDirection_19_281067_282568DR.png" width="100%"/></center>
 
 
+
+# Installing
+
+## requiremnts
+
+* pysam
+* pandas
+* matplotlib
+* tqdm
+
+install via pip:
+```
+pip install pysam==0.16.0.1 pandas matplotlib tqdm
+
+```
+
+or via conda:
+```
+conda install -c conda-forge -c anaconda -c bioconda  matplotlib pandas tqdm pysam pip
+
+```
+
+If you create an virt. enviroment for DrukBam make sure to install pip in this env, otherwise you global pip will be used and DrukBam will be installed in the base env
+
+
+## installation 
+
+currently `DrukBam` is available only via pypi:
+
+```
+pip install drukbam
+
+```
+A conda env and a docker image will follow
 
 
 # Usage
@@ -106,39 +142,7 @@ optional arguments:
 </details>
 
 
-## Installing
 
-# requiremnts
-
-* pysam
-* pandas
-* matplotlib
-* tqdm
-
-install via pip:
-```
-pip install pysam pandas matplotlib tqdm
-
-```
-
-or via conda:
-```
-conda install -c conda-forge -c anaconda -c bioconda  matplotlib pandas tqdm pysam pip
-
-```
-
-If you create an virt. enviroment for DrukBam make sure to install pip in this env, otherwise you global pip will be used and DrukBam will be installed in the base env
-
-
-# installation 
-
-currently `DrukBam` is available only via pypi:
-
-```
-pip install drukbam
-
-```
-A conda env and a docker image will follow
 
 
 ## Usage Examples:
@@ -189,4 +193,6 @@ The arguments used above are:
 `--fasta` location of ref. fasta
 
 `--threads` number of cpu's to use,
+
+
 

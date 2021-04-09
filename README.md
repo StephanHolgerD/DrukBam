@@ -20,7 +20,7 @@ DrukBam  can be used with or without a reference fasta file and allows fast plot
 
 # Installing
 
-## requiremnts
+## requirements
 
 * pysam
 * pandas
@@ -161,7 +161,7 @@ The arguments used above are:
 `-c` chromosome of ROI
 
 
-`-b` alignment file, sorted and index
+`-b` alignment file, sorted and indexed
 
 `--outfmt` format of plot
 
@@ -182,7 +182,7 @@ DrukBam vcf -b test_data/test_small.bam  -v example.vcf --padding 100  -i exampl
 The arguments used above are:
 
 
-`-b` alignment file, sorted and index
+`-b` alignment file, sorted and indexed
 
 `-v` vcf file 
 
@@ -193,6 +193,4 @@ The arguments used above are:
 `--fasta` location of ref. fasta
 
 `--threads` number of cpu's to use,
-
-
 

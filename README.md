@@ -200,7 +200,11 @@ The arguments used above are:
 * official matplotlib colors are allowed  [color list](https://matplotlib.org/2.0.2/examples/color/named_colors.html)
 * pltstyle can be changed  [style list](https://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html)
 
+### dark background
+<center><img src="exampleOutput/example_darkBG.png" width="100%"/></center>
 
 
+### seaborn
+<center><img src="exampleOutput/example_Seaborn.png" width="100%"/></center>
 
 ```

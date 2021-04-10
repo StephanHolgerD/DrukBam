@@ -1,7 +1,7 @@
 # DrukBam
-### `DrukBam` is a  program for plotting alignment files (.bam) for all comandline aficionados. 
+### `DrukBam` is a  program for plotting alignment files (.bam) for all comandline aficionados.
 
-DrukBam  can be used with or without a reference fasta file and allows fast plotting multiple variants or regions of interest. Please provide feedback like bugs or options you might miss, I wrote this programm because I did not found a convicning tool to provide fast plotting of alignemnts withput using a GUI like in IGV or Tablet. 
+DrukBam  can be used with or without a reference fasta file and allows fast plotting multiple variants or regions of interest. Please provide feedback like bugs or options you might miss, I wrote this programm because I did not found a convicning tool to provide fast plotting of alignemnts withput using a GUI like in IGV or Tablet.
 
 ## reference free
 <center><img src="exampleOutput/example_refFreeDirection_19_281367_281468.png" width="100%"/></center>
@@ -42,7 +42,7 @@ conda install -c conda-forge -c anaconda -c bioconda  matplotlib pandas tqdm pys
 If you create an virt. enviroment for DrukBam make sure to install pip in this env, otherwise you global pip will be used and DrukBam will be installed in the base env
 
 
-## installation 
+## installation
 
 currently `DrukBam` is available only via pypi:
 
@@ -184,7 +184,7 @@ The arguments used above are:
 
 `-b` alignment file, sorted and indexed
 
-`-v` vcf file 
+`-v` vcf file
 
 `-i` ID which is used for naming the plot
 
@@ -194,3 +194,13 @@ The arguments used above are:
 
 `--threads` number of cpu's to use,
 
+## Style changes:
+
+* color and style can be changed using the --style option and providing a style.ini file
+* official matplotlib colors are allowed  [color list](https://matplotlib.org/2.0.2/examples/color/named_colors.html)
+* pltstyle can be changed  [style list](https://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html)
+
+
+
+
+```

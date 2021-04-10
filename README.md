@@ -196,7 +196,7 @@ The arguments used above are:
 
 ## Style changes:
 
-* color and style can be changed using the --style option and providing a style.ini file
+* color and style can be changed using the --style option and providing a [style.ini](https://github.com/StephanHolgerD/DrukBam/blob/master/style.ini) file
 * official matplotlib colors are allowed  [color list](https://matplotlib.org/2.0.2/examples/color/named_colors.html)
 * pltstyle can be changed  [style list](https://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html)
 

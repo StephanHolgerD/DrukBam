@@ -44,13 +44,21 @@ If you create an virt. enviroment for DrukBam make sure to install pip in this e
 
 ## installation
 
-currently `DrukBam` is available only via pypi:
+`DrukBam` is available  via pypi:
 
 ```
 pip install drukbam
 
 ```
-A conda env and a docker image will follow
+
+or via conda
+
+```
+ conda install -c stephanholgerd drukbam 
+ 
+ ```
+ 
+a docker image will follow
 
 
 # Usage

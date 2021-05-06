@@ -139,14 +139,15 @@ class CalcPlot():
 
 
     def AxSet(self,ax,start,end,chunk=False,direction='all',vcf=False):
+        print('lel')
         ylabel=direction
         if not chunk:
             ax.set(xlim=(start,end),ylim=(0,self.maxHeight+2),ylabel=ylabel)
             if vcf:
                 ax.set_xticks([start,start+(end-start)/2,end],)
-                ax.set_xticklabels([str(start/1_000_000)+' mb','vcf position',str(end/1_000_000)+' mb'], rotation=40, ha='right')
+                ax.set_xticklabels([str("{:,}".format(start))+' mb','vcf position',str("{:,}".format(end))+' mb'], rotation=40, ha='right')
             else:
-                ax.set_xticklabels([str(start/1_000_000)+' mb',str(end/1_000_000)+' mb'], rotation=40, ha='right')
+                ax.set_xticklabels([str("{:,}".format(start))+' mb',str("{:,}".format(end))+' mb'], rotation=40, ha='right')
                 ax.set_xticks([start,end],)
 
         else:
@@ -156,7 +157,7 @@ class CalcPlot():
                 ax.set(ylabel=ylabel)
                 ax.get_yaxis().set_visible(True)
                 ax.set_xticks([start])
-                ax.set_xticklabels([str(start/1_000_000)+' mb'], rotation=40, ha='right',fontsize=6)
+                ax.set_xticklabels([str("{:,}".format(start))+' mb'], rotation=40, ha='right',fontsize=6)
             if end==self.end:
                 ax.set_xticks([start,start+self.chunksize])
                 ax.set_xticklabels(['',str((start+self.chunksize)/1_000_000)+' mb'], rotation=40, ha='right',fontsize=6)

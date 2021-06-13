@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "DrukBam"
+version = "0.1.1.5"
+description = "Comandline plotting of sort,indexed bam files"
+authors = ["Stephan Holger Drukewitz"]
+license = "MIT"
+packages = [
+    {include = "DrukBam"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.7.1"
+cython = '^0.29'
+pysam = "^0.16.0"
+pandas = "^1.2.4"
+matplotlib = "^3.4.2"
+tqdm = "^4.61.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+# aka entry points or console scripts for setup.py users
+'DrukBam' = 'DrukBam.__main__:main'

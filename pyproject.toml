@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "DrukBam"
-version = "0.1.1.5"
+version = "0.1.2.3"
 description = "Comandline plotting of sort,indexed bam files"
 authors = ["Stephan Holger Drukewitz"]
 license = "MIT"

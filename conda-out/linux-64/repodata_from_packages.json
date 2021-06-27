@@ -1,0 +1,33 @@
+{
+  "info": {
+    "subdir": "linux-64"
+  },
+  "packages": {
+    "drukbam-0.1.2.3-py39_0.tar.bz2": {
+      "build": "py39_0",
+      "build_number": 0,
+      "depends": [
+        "cython >=0.29,<0.30",
+        "matplotlib >=3.4.2,<4.0.0",
+        "pandas >=1.2.4,<2.0.0",
+        "poetry",
+        "pysam >=0.16.0,<0.17.0",
+        "python >=3.9,<3.10.0a0",
+        "python_abi 3.9.* *_cp39",
+        "tqdm >=4.61.1,<5.0.0"
+      ],
+      "license": "MIT",
+      "license_family": "MIT",
+      "md5": "e1ffdfcd2c419f862c95a8f3b2d32c34",
+      "name": "drukbam",
+      "sha256": "5a90edf1c26b4cb4993c8fa205ae1f309a4bcfb958853fbfe4d382c4535292c0",
+      "size": 26278,
+      "subdir": "linux-64",
+      "timestamp": 1624821482530,
+      "version": "0.1.2.3"
+    }
+  },
+  "packages.conda": {},
+  "removed": [],
+  "repodata_version": 1
+}

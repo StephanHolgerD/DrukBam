@@ -1,5 +1,7 @@
 [tool.poetry]
 name = "DrukBam"
+url = "https://github.com/StephanHolgerD/DrukBam"
+author_email = "steph-druk@web.de"
 version = "0.1.2.3"
 description = "Comandline plotting of sort,indexed bam files"
 authors = ["Stephan Holger Drukewitz"]
@@ -16,7 +18,6 @@ pandas = "^1.2.4"
 matplotlib = "^3.4.2"
 tqdm = "^4.61.1"
 
-[tool.poetry.dev-dependencies]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -25,3 +26,5 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 # aka entry points or console scripts for setup.py users
 'DrukBam' = 'DrukBam.__main__:main'
+[tool.poetry2conda]
+name = "DrukBam"

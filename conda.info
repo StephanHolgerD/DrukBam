@@ -1,0 +1,8 @@
+poetry build
+poetry publish
+
+
+conda skeleton pypi $pkg
+conda build --output-folder ./conda-out/ ./drukbam
+anaconda login
+anaconda upload ./conda-out/linux-64/drukbam-0.1.2.3-py39_0.tar.bz2

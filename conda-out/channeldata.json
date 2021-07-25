@@ -9,7 +9,7 @@
       "dev_url": null,
       "doc_source_url": null,
       "doc_url": null,
-      "home": "The package home page",
+      "home": "https://github.com/StephanHolgerD/DrukBam",
       "icon_hash": null,
       "icon_url": null,
       "identifiers": null,
@@ -21,15 +21,15 @@
       "recipe_origin": null,
       "run_exports": {},
       "source_git_url": null,
-      "source_url": "https://pypi.io/packages/source/D/DrukBam/DrukBam-0.1.2.3.tar.gz",
+      "source_url": "https://pypi.io/packages/source/D/DrukBam/DrukBam-1.1.1.tar.gz",
       "subdirs": [
         "linux-64"
       ],
-      "summary": "plots sorted indexed bam files",
+      "summary": "Comandline plotting of sort,indexed bam files",
       "tags": null,
       "text_prefix": true,
-      "timestamp": 1624821482,
-      "version": "0.1.2.3"
+      "timestamp": 1627240214,
+      "version": "1.1.1"
     }
   },
   "subdirs": [

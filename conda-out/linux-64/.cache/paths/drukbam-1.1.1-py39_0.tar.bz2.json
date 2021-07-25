@@ -4,8 +4,8 @@
       "_path": "bin/DrukBam",
       "file_mode": "text",
       "path_type": "hardlink",
-      "prefix_placeholder": "/home/stephano/miniconda3/envs/DrukBamDEV/conda-bld/drukbam_1624821220656/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_plac",
-      "sha256": "98d04dd2d7b0fefacd5aadf4b2853901afee6f78bc61e9b4e966e8c0be68b658",
+      "prefix_placeholder": "/home/stephano/miniconda3/envs/devEnv/conda-bld/drukbam_1627239669611/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehol",
+      "sha256": "5e7b13256b3ffca44bbfb21d0f36d32ac9732136813b9c312e5387a65840004a",
       "size_in_bytes": 469
     },
     {
@@ -35,43 +35,43 @@
     {
       "_path": "lib/python3.9/site-packages/DrukBam/__pycache__/MapPlot.cpython-39.pyc",
       "path_type": "hardlink",
-      "sha256": "59511a02dd82f6a4012d29f9862c428434ccc5030177ca4f8f5182e3a3ef5e22",
+      "sha256": "683b9ab041d284952e715b2b2ef0a076bff7365e29a4db0d5bc5de7207a851cc",
       "size_in_bytes": 9211
     },
     {
       "_path": "lib/python3.9/site-packages/DrukBam/__pycache__/PlotCalc.cpython-39.pyc",
       "path_type": "hardlink",
-      "sha256": "40dcffa58ddce663647f0e574a2be5ffa597f0db476ab4e8b5db4e6f666009f6",
+      "sha256": "fb19184054d2ea307dcafc4b6e2b7d33e5299be252f1d7153c347993320fea51",
       "size_in_bytes": 9469
     },
     {
       "_path": "lib/python3.9/site-packages/DrukBam/__pycache__/__init__.cpython-39.pyc",
       "path_type": "hardlink",
-      "sha256": "ed68ad95af1508f6eda4611931f156ed03d74f9036ffa7f0e35e78fccd0ab87b",
+      "sha256": "2782e2418d6baba8b356a5bb1f9d4ccd8aabc621cd2641e9361490d00ef63ba7",
       "size_in_bytes": 159
     },
     {
       "_path": "lib/python3.9/site-packages/DrukBam/__pycache__/__main__.cpython-39.pyc",
       "path_type": "hardlink",
-      "sha256": "efcbf5b7e66e30c9cfd773443c7d0fb053bdfbabb9b6c815e0015a767887567d",
+      "sha256": "d38cd9f5582f34a12786a91dc52298dff888f7b99ebcb3944530dc35ae888ea2",
       "size_in_bytes": 3299
     },
     {
       "_path": "lib/python3.9/site-packages/DrukBam/__pycache__/bamCalc.cpython-39.pyc",
       "path_type": "hardlink",
-      "sha256": "0ed1bb87a63e48bf470b4badd8680521f121bbc868a4966fa6b3cccbb7accea6",
+      "sha256": "e2a597c2bb7b1311e9dce96ae5f710da87809fd6ca3a8e677c989e2520bb47c1",
       "size_in_bytes": 4332
     },
     {
       "_path": "lib/python3.9/site-packages/DrukBam/__pycache__/setup.cpython-39.pyc",
       "path_type": "hardlink",
-      "sha256": "706fba01b1d693727c4c868e5a2f5fa4a31871ec4cf468859aed007492ebeecd",
-      "size_in_bytes": 847
+      "sha256": "ffe866d69423d7780caa80059920022afd80c528d17f29f5ec9ba40531376b36",
+      "size_in_bytes": 777
     },
     {
       "_path": "lib/python3.9/site-packages/DrukBam/__pycache__/vcfParse.cpython-39.pyc",
       "path_type": "hardlink",
-      "sha256": "363ddc702face04c9c928c29e586d15dd8da20b0fb299e560caf71699fed7ad2",
+      "sha256": "3edfcd04a567894c77604140bb0ed1ab443e834323af7ac1e94bb32aff3da1a5",
       "size_in_bytes": 2003
     },
     {
@@ -89,8 +89,8 @@
     {
       "_path": "lib/python3.9/site-packages/DrukBam/setup.py",
       "path_type": "hardlink",
-      "sha256": "52ccf4d1c01e5d4f1bdccdc48ce6604d3a0237b724557e044fa4d8a74db44921",
-      "size_in_bytes": 985
+      "sha256": "a1125b578bfff5f7b95c67f98278358f3056a38f5b74b16e1dcd1afb28e130bc",
+      "size_in_bytes": 799
     },
     {
       "_path": "lib/python3.9/site-packages/DrukBam/vcfParse.py",
@@ -99,43 +99,43 @@
       "size_in_bytes": 2043
     },
     {
-      "_path": "lib/python3.9/site-packages/drukbam-0.1.2.3.dist-info/INSTALLER",
+      "_path": "lib/python3.9/site-packages/drukbam-1.1.1.dist-info/INSTALLER",
       "path_type": "hardlink",
       "sha256": "d0edee15f91b406f3f99726e44eb990be6e34fd0345b52b910c568e0eef6a2a8",
       "size_in_bytes": 5
     },
     {
-      "_path": "lib/python3.9/site-packages/drukbam-0.1.2.3.dist-info/METADATA",
+      "_path": "lib/python3.9/site-packages/drukbam-1.1.1.dist-info/METADATA",
       "path_type": "hardlink",
-      "sha256": "c77e8bac84f20188f3d649249badc8811d3f92b816a3a2c2a01f232b20313d82",
-      "size_in_bytes": 582
+      "sha256": "b02500f5bf7fdeb799cd04f0484d52cb6105eb12b446f3341734e175e3c8b210",
+      "size_in_bytes": 633
     },
     {
-      "_path": "lib/python3.9/site-packages/drukbam-0.1.2.3.dist-info/RECORD",
+      "_path": "lib/python3.9/site-packages/drukbam-1.1.1.dist-info/RECORD",
       "path_type": "hardlink",
-      "sha256": "cab40a151ce239f4eb6c4a9f4aff72dde09de7374c02debf5318df304e0dc4cf",
-      "size_in_bytes": 1600
+      "sha256": "d941c19fcddc383b26eb6025ae90e197a9af1d0c28a26af71ae62d99de5e21c8",
+      "size_in_bytes": 1586
     },
     {
-      "_path": "lib/python3.9/site-packages/drukbam-0.1.2.3.dist-info/REQUESTED",
+      "_path": "lib/python3.9/site-packages/drukbam-1.1.1.dist-info/REQUESTED",
       "path_type": "hardlink",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "size_in_bytes": 0
     },
     {
-      "_path": "lib/python3.9/site-packages/drukbam-0.1.2.3.dist-info/WHEEL",
+      "_path": "lib/python3.9/site-packages/drukbam-1.1.1.dist-info/WHEEL",
       "path_type": "hardlink",
       "sha256": "57b8957243fe198ade7afb130e7bf57808a742dfda02bc270319a73f48328016",
       "size_in_bytes": 83
     },
     {
-      "_path": "lib/python3.9/site-packages/drukbam-0.1.2.3.dist-info/direct_url.json",
+      "_path": "lib/python3.9/site-packages/drukbam-1.1.1.dist-info/direct_url.json",
       "path_type": "hardlink",
-      "sha256": "cadf71220219d6ad6ea727d19ce16aa7e179ce078953880241f56f52f3f0a794",
-      "size_in_bytes": 112
+      "sha256": "8ae634c6c171457035a6bb368180a13201bb13a53f84dfc35174c1bb27867871",
+      "size_in_bytes": 108
     },
     {
-      "_path": "lib/python3.9/site-packages/drukbam-0.1.2.3.dist-info/entry_points.txt",
+      "_path": "lib/python3.9/site-packages/drukbam-1.1.1.dist-info/entry_points.txt",
       "path_type": "hardlink",
       "sha256": "07bd89c248ca768822b6f0fe6fef41d2d9126ac3a76499aff36cd75884c2dbef",
       "size_in_bytes": 49

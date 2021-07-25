@@ -1,4 +1,0 @@
-pandas
-pysam
-tqdm
-matplotlib

@@ -1,8 +1,7 @@
 [tool.poetry]
 name = "DrukBam"
-url = "https://github.com/StephanHolgerD/DrukBam"
-author_email = "steph-druk@web.de"
-version = "0.1.2.3"
+homepage = "https://github.com/StephanHolgerD/DrukBam"
+version = "1.1.1"
 description = "Comandline plotting of sort,indexed bam files"
 authors = ["Stephan Holger Drukewitz"]
 license = "MIT"

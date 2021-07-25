@@ -2,7 +2,13 @@ poetry build
 poetry publish
 
 
-conda skeleton pypi $pkg
-conda build --output-folder ./conda-out/ ./drukbam
+conda skeleton pypi $pkg # need to check dependencies !!
+
+conda build --output-folder ./conda-out/ ./drukbam #conda buiild -c bioconda  -c conda-forge  --output-folder ./conda-out/ ./drukbam/
 anaconda login
 anaconda upload ./conda-out/linux-64/drukbam-0.1.2.3-py39_0.tar.bz2
+
+conda convert --platform all conda-out/linux-64/drukbam-1.1.1-py39_0.tar.bz2   -o conda-out/
+
+
+for a in $(ls conda-out/*/dru*bz2) ; do anaconda upload --force ${a} ; done

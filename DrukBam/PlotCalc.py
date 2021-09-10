@@ -42,74 +42,86 @@ class CalcPlot():
         self.colorDict=colorDict
         plt.style.use(self.colorDict['pltstyle'])
 
+        plt.rc('font', size=8)          # controls default text sizes
+        plt.rc('axes', titlesize=8)     # fontsize of the axes title
+        plt.rc('axes', labelsize=8)    # fontsize of the x and y labels
+        plt.rc('xtick', labelsize=6)    # fontsize of the tick labels
+        plt.rc('ytick', labelsize=6)    # fontsize of the tick labels
+        plt.rc('legend', fontsize=8)    # legend fontsize
+        plt.rc('figure', titlesize=8)  # fontsize of the figure title
+
+
 
         #self.colorDict={'A':'red','C':'blue','T':'green','G':'yellow','-':'white','N':'pink','a':'red','c':'blue','t':'green','g':'yellow','-':'white','n':'pink','|':'black'}
     def startPlot(self,cols,direction,schematic):
+        if self.end-self.start <=100:
+            self.Fontsize=self.Fontsize/2
+            x_perN=0.07/2
+            y_perN=0.12/2
+            self.LW=0.1
+            self.Fontsize=3
 
+
+        else:
+            x_perN=0.07
+            y_perN=0.12
+            self.LW=0.2
+            self.Fontsize=3*2
+
+        msize=.2
         self.cols=cols
         self.innerLW=0
-        self.LW=0.2
         if not direction and not schematic:
             if cols==1:
-                if self.end-self.start <=100:
-                    x=0.07*(self.end-self.start)
-                    y=0.12*self.maxHeight
-                    fig,ax=plt.subplots(1,cols,figsize=(x,y))
-                    self.Fontsize=6
-                    self.markersize=0.5
-                else:
-                    x=0.035*(self.end-self.start)
-                    y=0.06*self.maxHeight
-                    self.markersize=0.25
-
-                    fig,ax=plt.subplots(1,cols,figsize=(x,y))
+                x=x_perN*(self.end-self.start)
+                y=y_perN*self.maxHeight
+                self.markersize=msize
+                fig,ax=plt.subplots(1,cols,figsize=(x,y))
             if cols >1:
-                x=0.035*5000
-                y=0.06*self.maxHeight
+                x=x_perN*5000
+                y=y_perN*self.maxHeight
                 fig,ax=plt.subplots(1,cols,figsize=(x*cols,6))
         if direction and not schematic:
             if cols==1:
                 if self.end-self.start <=100:
-                    x=0.07*(self.end-self.start)
-                    y=0.12*self.maxHeight*2
-                    self.markersize=0.5
-
+                    x=x_perN*(self.end-self.start)
+                    y=y_perN*self.maxHeight*2
+                    self.markersize=msize
                     fig,ax=plt.subplots(2,cols,figsize=(x,y))
-                    self.Fontsize=6
                 else:
-                    x=0.035*(self.end-self.start)
-                    y=0.06*self.maxHeight*2
-                    self.markersize=0.25
+                    x=x_perN*(self.end-self.start)
+                    y=y_perN*self.maxHeight*2
+                    self.markersize=msize
                     fig,ax=plt.subplots(2,cols,figsize=(x,y))
             if cols >1:
-                x=0.035*5000
-                y=0.06*self.maxHeight*2
+                x=x_perN*5000
+                y=y_perN*self.maxHeight*2
                 fig,ax=plt.subplots(2,cols,figsize=(x*cols,6))
 
 
         if not direction and schematic:
             if self.cols >= 5:
-                y=(0.12*self.maxHeight)/5
+                y=(y_perN*self.maxHeight)/5
                 x=12
                 self.innerLW=0
                 self.LW=0.2
             else:
                 self.innerLW=0.4/self.cols
-                self.LW=3/self.cols
+                self.LW=2/self.cols
                 x=12
-                y=(0.12*self.maxHeight)/self.cols
+                y=(y_perN*self.maxHeight)/self.cols
             fig,ax=plt.subplots(1,self.cols,figsize=(x,y))
         if  direction and schematic:
             if self.cols >= 5:
-                y=((0.12*self.maxHeight)/5)*2
+                y=((y_perN*self.maxHeight)/5)*2
                 x=12
                 self.innerLW=0
                 self.LW=0.2
             else:
                 self.innerLW=0.4/self.cols
-                self.LW=3/self.cols
+                self.LW=2/self.cols
                 x=12
-                y=((0.12*self.maxHeight)/self.cols)*2
+                y=((y_perN*self.maxHeight)/self.cols)*2
             fig,ax=plt.subplots(2,self.cols,figsize=(x,y))
 
         plt.suptitle('chromosome {} from {} to {}'.format(str(self.chrom),str(self.start),str(self.end)))
@@ -139,34 +151,41 @@ class CalcPlot():
 
 
     def AxSet(self,ax,start,end,chunk=False,direction='all',vcf=False):
+
         ylabel=direction
         if not chunk:
             ax.set(xlim=(start,end),ylim=(0,self.maxHeight+2),ylabel=ylabel)
+            ax.yaxis.set_ticks_position('left')
+
             if vcf:
                 ax.set_xticks([start,start+(end-start)/2,end],)
                 ax.set_xticklabels([str("{:,}".format(start)),'vcf position',str("{:,}".format(end))], rotation=40, ha='right')
             else:
-                ax.set_xticklabels([str("{:,}".format(start)),str("{:,}".format(end))], rotation=40, ha='right')
                 ax.set_xticks([start,end],)
+                ax.set_xticklabels([str("{:,}".format(start)),str("{:,}".format(end))], rotation=40, ha='right')
 
         else:
+            ax.xaxis.set_tick_params(length=1)
             ax.get_yaxis().set_visible(False)
             ax.set(xlim=(start,start+self.chunksize),ylim=(0,self.maxHeight+2))
+            ax.yaxis.set_ticks_position('none')
+            ax.xaxis.set_ticks_position('bottom')
             if start==self.start:
                 ax.set(ylabel=ylabel)
                 ax.get_yaxis().set_visible(True)
                 ax.set_xticks([start])
-                ax.set_xticklabels([str("{:,}".format(start))], rotation=40, ha='right',fontsize=6)
+                ax.set_xticklabels([str("{:,}".format(start))], rotation=40, ha='right')
             if end==self.end:
                 ax.set_xticks([start,start+self.chunksize])
-                ax.set_xticklabels(['',str((start+self.chunksize)/1_000_000)], rotation=40, ha='right',fontsize=6)
+                ax.set_xticklabels(['',str((start+self.chunksize)/1_000_000)], rotation=40, ha='right')
             if  start!=self.start and end!=self.end:
                 ax.set_xticks([start])
-                ax.set_xticklabels([''], rotation=40, ha='right',fontsize=6)
+                ax.set_xticklabels([''], rotation=40, ha='right')
 
 
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(False)
+
 
     def CigChunker(self,cig):
         cigL=[]
@@ -267,7 +286,7 @@ class CalcPlot():
                 continue
 
             if self.fasta != 'None':
-                ax.scatter([x+s for x in range(0,len(chunk_cigarstring))],len(chunk_cigarstring)*[y], marker='o',s=self.markersize,color=self.colorDict['dot'],alpha=alpha)
+                ax.scatter([x+s for x in range(0,len(chunk_cigarstring))],len(chunk_cigarstring)*[y], marker='.',s=.2,linewidth=self.LW,color=self.colorDict['dot'],alpha=alpha)
 
             for p,alignPos in enumerate(chunk_cigarstring):
                 x=s+p

@@ -32,7 +32,7 @@ def main():
     optArguments.add_argument('--direction',default=False,action='store_true', help="split reads by forward and reverse")
     optArguments.add_argument('--schematic',default=False,action='store_true', help='plot no nucleotide, recommended for ROI>1000')
     optArguments.add_argument('--style',default=None, help='different style options for the plot, provide .ini file')
-    #optArguments.add_argument('--flag',default='None', help='different style options for the plot, def:classic',choices=['None','MateUnmapped','SoftClipped','MateUnmappedSoftClipped','Insertion'])
+    optArguments.add_argument('--flag',default=None, help='different style options for the plot, def:classic')
     optArguments.add_argument('--fasta',default='None', help='fasta file for reference related plotting')
     optArguments.add_argument('--outputdir',default='current working directory', help='directory for output')
     optArguments.add_argument('-i','--id',default='name of mapping', help='output filename')
@@ -50,7 +50,7 @@ def main():
     optArguments.add_argument('--direction',default=False,action='store_true', help="split reads by forward and reverse")
     optArguments.add_argument('--schematic',default=False,action='store_true', help='plot no nucleotide, recommended for ROI>1000')
     optArguments.add_argument('--style',default=None, help='different style options for the plot, provide .ini file')
-    #optArguments.add_argument('--flag',default='None', help='different style options for the plot, def:classic',choices=['None','MateUnmapped','SoftClipped','MateUnmappedSoftClipped','Insertion'])
+    optArguments.add_argument('--flag',default=None, help='different style options for the plot, def:classic')
     optArguments.add_argument('--fasta',default='None', help='fasta file for reference related plotting')
     optArguments.add_argument('--outputdir',default='current working directory', help='directory for output')
     optArguments.add_argument('-i','--id',default='name of mapping', help='output filename')
@@ -78,7 +78,8 @@ def main():
         chunksize=args.chunksize,
         style=args.style,
         outfmt=args.outfmt,
-        outlineoff=args.outlineoff)
+        outlineoff=args.outlineoff,
+        flag=args.flag)
         ploter.Plot()
     if args.__contains__('vcf'):
         ploter=VcfPlotter(args.vcf,args.bam,
@@ -92,7 +93,8 @@ def main():
         chunksize=args.chunksize,
         style=args.style,
         outfmt=args.outfmt,
-        outlineoff=args.outlineoff)
+        outlineoff=args.outlineoff,
+        flag=args.flag)
         ploter.MultiPlot()
         print(time()-t)
 

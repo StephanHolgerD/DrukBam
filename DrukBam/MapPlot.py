@@ -99,6 +99,7 @@ class PlotMapping():
         return results,multi
 
     def CalcRVRS(self):
+        print('calc')
         span=self.end-self.start
         multi=[]
         start=self.start

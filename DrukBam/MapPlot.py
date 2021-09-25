@@ -7,7 +7,7 @@ from DrukBam.bamCalc import CalcMapping
 from DrukBam.PlotCalc import CalcPlot
 import sys
 class PlotMapping():
-    def __init__(self,mapping,chrom,start,end,coverage=200,flag='None',direction=False,schematic=False,chunksize=1000,threads=1,fasta=None,output='current working directory',
+    def __init__(self,mapping,chrom,start,end,coverage=200,flag=None,Flag=None,direction=False,schematic=False,chunksize=1000,threads=1,fasta=None,output='current working directory',
     out_name='name of mapping',vcf=False,style='classic',outfmt='pdf',outlineoff=False):
         self.outputdir=output
         self.out_name=out_name
@@ -18,6 +18,8 @@ class PlotMapping():
         self.Fontsize=3
         self.threads=threads
         self.flag=flag
+        self.Flag=Flag
+
         self.chunksize=chunksize
         self.direction=direction
         if direction:
@@ -28,8 +30,8 @@ class PlotMapping():
         self.threads=threads
         self.fasta=fasta
         self.style=style
-        self.CalcMapping=CalcMapping(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,chunksize=chunksize)
-        self.CalcPlot=CalcPlot(mapping,chrom,self.start,self.end,coverage=self.maxHeight,flag=self.flag, threads=self.threads,fasta=self.fasta,style=self.style,outlineoff=outlineoff)
+        self.CalcMapping=CalcMapping(mapping,chrom,start,end,coverage=self.maxHeight,flag=self.flag,Flag=self.Flag, threads=self.threads,chunksize=chunksize)
+        self.CalcPlot=CalcPlot(mapping,chrom,self.start,self.end,coverage=self.maxHeight,threads=self.threads,fasta=self.fasta,style=self.style,outlineoff=outlineoff)
         self.vcf=vcf
         self.outfmt=outfmt
     def savePlot(self,schmematic=False,direction=False,reference=False):

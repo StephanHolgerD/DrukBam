@@ -5,7 +5,7 @@ from tqdm import tqdm
 from multiprocessing import Pool
 
 class CalcMapping():
-    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000):
+    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag=None,Flag=None,chunksize=1000):
         self.mapping=mapping
         self.chrom=chrom
         self.start=start-1
@@ -14,10 +14,13 @@ class CalcMapping():
         self.Fontsize=3
         self.threads=threads
         self.flag = flag
+        self.Flag = Flag
         if self.flag is not None:
-            print('flag')
             self.flag=int(self.flag)
             self.flags=set(self.SolveFlag(self.flag))
+        if self.Flag is not None:
+            self.Flag=int(self.Flag)
+            self.Flags=set(self.SolveFlag(self.Flag))
         self.chunksize=chunksize
 
     def SolveFlag(self,flag):
@@ -49,13 +52,14 @@ class CalcMapping():
         plotList=[]
         with pysam.AlignmentFile(self.mapping) as s:
             for record in tqdm(s.fetch(str(chrom),start,end,until_eof=True)):
-            #    if self.flag is not None:
-            #        print('lol')
-            #        readFlags=set(self.SolveFlag(record.flag))
-            #        if len(readFlags.intersection(self.flags))!=len(readFlags):
-            #            continue
-                #print(df)
-                #print(list(df))
+                if self.flag is not None:
+                    readFlags=set(self.SolveFlag(record.flag))
+                    if len(readFlags.intersection(self.flags))!=len(self.flags):
+                        continue
+                if self.Flag is not None:
+                    readFlags=set(self.SolveFlag(record.flag))
+                    if len(readFlags.intersection(self.Flags))==len(self.Flags):
+                        continue
                 if not record.is_unmapped:
                     if record.is_reverse:
                         if forwardOnly:
@@ -63,7 +67,7 @@ class CalcMapping():
                     if not record.is_reverse:
                         if reverseOnly:
                             continue
-                
+
                 #    if record.reference_start>=start and record.reference_end<end:
                 #        if df.loc[self.maxHeight,start:end].sum()>=((self.end-self.start)*0.9):
                 #            print('hardbreak')

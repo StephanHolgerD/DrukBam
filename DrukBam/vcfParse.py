@@ -7,7 +7,7 @@ from DrukBam.MapPlot import PlotMapping
 import sys
 from time import time
 class VcfPlotter():
-    def __init__(self,vcf,mapping,coverage=200,flag='None',chunksize=1000,padding=20,direction=False,schematic=False,threads=1,
+    def __init__(self,vcf,mapping,coverage=200,flag=None,Flag=None,chunksize=1000,padding=20,direction=False,schematic=False,threads=1,
     fasta=None,output='current working directory',out_name='name of mapping',style='classic',outfmt='pdf',outlineoff=False):
         self.outputdir=output
         self.out_name=out_name
@@ -17,6 +17,7 @@ class VcfPlotter():
         self.Fontsize=3
         self.threads=threads
         self.flag=flag
+        self.Flag=Flag
         self.direction=direction
         if direction:
             self.maxHeight=coverage
@@ -36,6 +37,7 @@ class VcfPlotter():
                 int(s),
                 int(e),
                 flag=self.flag,
+                Flag=self.Flag,
                 schematic=self.schematic,
                 direction=self.direction,
                 coverage=self.maxHeight,

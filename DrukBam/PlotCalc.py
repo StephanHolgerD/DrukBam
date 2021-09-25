@@ -177,7 +177,7 @@ class CalcPlot():
                 ax.set_xticklabels([str("{:,}".format(start))], rotation=40, ha='right')
             if end==self.end:
                 ax.set_xticks([start,start+self.chunksize])
-                ax.set_xticklabels(['',str((start+self.chunksize)/1_000_000)], rotation=40, ha='right')
+                ax.set_xticklabels(['',str("{:,}".format(end))], rotation=40, ha='right')
             if  start!=self.start and end!=self.end:
                 ax.set_xticks([start])
                 ax.set_xticklabels([''], rotation=40, ha='right')

@@ -34,7 +34,7 @@ def main():
     optArguments.add_argument('--style',default=None, help='different style options for the plot, provide .ini file')
     optArguments.add_argument('--Flag',default=None, help='provide flag of non-interest, all single flags are not allowed to be in total flag of read')
     optArguments.add_argument('--flag',default=None, help='provide flag of interest, all single flags needs to be in toctal flag of read')
-
+    optArguments.add_argument('--clipped',default=1, help='if higher percentage clipped, read is highlighted',type=float)
     optArguments.add_argument('--fasta',default='None', help='fasta file for reference related plotting')
     optArguments.add_argument('--outputdir',default='current working directory', help='directory for output')
     optArguments.add_argument('-i','--id',default='name of mapping', help='output filename')
@@ -48,7 +48,7 @@ def main():
     optArguments = vcf_parser.add_argument_group('optional arguments')
     optArguments.add_argument('--threads',default=1, help="number of cpu's  to run in paralell, ROI <1000 will always use 1 core",type=int)
     optArguments.add_argument('--maxcoverage',default=200, help="max cov to plot",type=int)
-
+    optArguments.add_argument('--clipped',default=1, help='if higher percentage clipped, read is highlighted',type=float)
     optArguments.add_argument('--direction',default=False,action='store_true', help="split reads by forward and reverse")
     optArguments.add_argument('--schematic',default=False,action='store_true', help='plot no nucleotide, recommended for ROI>1000')
     optArguments.add_argument('--style',default=None, help='different style options for the plot, provide .ini file')
@@ -84,7 +84,8 @@ def main():
         outfmt=args.outfmt,
         outlineoff=args.outlineoff,
         flag=args.flag,
-        Flag=args.Flag)
+        Flag=args.Flag,
+        clipped=args.clipped)
         ploter.Plot()
     if args.__contains__('vcf'):
         ploter=VcfPlotter(args.vcf,args.bam,
@@ -100,7 +101,8 @@ def main():
         outfmt=args.outfmt,
         outlineoff=args.outlineoff,
         Flag=args.Flag,
-        flag=args.flag)
+        flag=args.flag,
+        clipped=args.clipped)
         ploter.MultiPlot()
         print(time()-t)
 

@@ -8,7 +8,7 @@ import sys
 from time import time
 class VcfPlotter():
     def __init__(self,vcf,mapping,coverage=200,flag=None,Flag=None,chunksize=1000,padding=20,direction=False,schematic=False,threads=1,
-    fasta=None,output='current working directory',out_name='name of mapping',style='classic',outfmt='pdf',outlineoff=False):
+    fasta=None,output='current working directory',out_name='name of mapping',style='classic',outfmt='pdf',outlineoff=False,clipped=1):
         self.outputdir=output
         self.out_name=out_name
         self.mapping=mapping
@@ -19,6 +19,7 @@ class VcfPlotter():
         self.flag=flag
         self.Flag=Flag
         self.direction=direction
+        self.clipped=clipped
         if direction:
             self.maxHeight=coverage
         else:
@@ -38,6 +39,7 @@ class VcfPlotter():
                 int(e),
                 flag=self.flag,
                 Flag=self.Flag,
+                clipped=self.clipped,
                 schematic=self.schematic,
                 direction=self.direction,
                 coverage=self.maxHeight,

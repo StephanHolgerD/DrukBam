@@ -8,7 +8,7 @@ import os
 import sys
 import matplotlib.patches as patches
 class CalcPlot():
-    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000, fasta=None,style='classic',outlineoff=False):
+    def __init__(self,mapping,chrom,start,end,threads=1,coverage=200,flag='None',chunksize=1000, fasta=None,style='classic',outlineoff=False,clipped=1):
         self.mapping=mapping
         self.chrom=chrom
         self.start=start
@@ -30,7 +30,8 @@ class CalcPlot():
 
         else:
             config.read(os.path.join(os.path.dirname(__file__),'classic.ini'))
-
+        self.clipped=clipped
+        print(self.clipped)
         colorDict={}
         for a in config['nucleotide color']:
             colorDict[a.upper()]=config['nucleotide color'][a]
@@ -39,6 +40,14 @@ class CalcPlot():
             colorDict[a]=config['special chars'][a]
         for a in config['MatplotStyle']:
             colorDict[a]=config['MatplotStyle'][a]
+        colorDict['ClippedAlpha']=float(config['clipped']['alpha'])
+        colorDict['ClippedBackground']=config['clipped']['background']
+        colorDict['ClippedColor']=config['clipped']['outline']
+
+        colorDict['OutlineAlpha']=float(config['outline']['alpha'])
+        colorDict['OutlineBackground']=config['outline']['background']
+        colorDict['OutlineColor']=config['outline']['outline']
+
         self.colorDict=colorDict
         plt.style.use(self.colorDict['pltstyle'])
 
@@ -60,6 +69,9 @@ class CalcPlot():
             y_perN=0.12/2
             self.LW=0.1
             self.Fontsize=3
+            self.OutlineInnerW=2.2
+            self.OutlineOuterW=2.6
+
 
 
         else:
@@ -67,6 +79,8 @@ class CalcPlot():
             y_perN=0.12
             self.LW=0.2
             self.Fontsize=3*2
+            self.OutlineInnerW=2.2*2
+            self.OutlineOuterW=2.6*2
 
         msize=.2
         self.cols=cols
@@ -257,23 +271,23 @@ class CalcPlot():
 
 
             softClipp=len(chunk_cigarstringS)/chunkL
-            alpha=1
-            if flag=='None':
-                alpha=1
-            if flag=='MateUnmapped':
-                if mate:
-                    alpha=0.3
-            if flag=='SoftClipped':
-                if softClipp>=0.05:
-                    alpha=0.3
-            if flag=='MateUnmappedSoftClipped':
-                if softClipp>=0.1 or mate:
-                    alpha=0.3
+
+            alpha=self.colorDict['OutlineAlpha']
+            outlineColor=self.colorDict['OutlineColor']
+            outlineBackground=self.colorDict['OutlineBackground']
+
+            if softClipp >= self.clipped:
+                alpha=self.colorDict['ClippedAlpha']
+                outlineColor=self.colorDict['ClippedColor']
+                outlineBackground=self.colorDict['ClippedBackground']
+
+
+
             fastapos=0
             drawChunk=[]
             if not self.outlineoff:
-                ax.plot((s,s+len(query_alignment_sequence)-1),(y,y),color='black',linewidth=2.6,zorder=0)
-                ax.plot((s+0.1,s+len(query_alignment_sequence)-1-0.1),(y,y),color='darkgrey',linewidth=2.2,alpha=0.5,zorder=0)
+                ax.plot((s,s+len(query_alignment_sequence)-1),(y,y),color=outlineColor,linewidth=self.OutlineOuterW,zorder=0)
+                ax.plot((s+0.1,s+len(query_alignment_sequence)-1-0.1),(y,y),color=outlineBackground,linewidth=self.OutlineInnerW,alpha=alpha,zorder=0)
 
             fontDict={'A':r'$\mathtt{A}$','C':r'$\mathtt{C}$','G':r'$\mathtt{G}$','T':r'$\mathtt{T}$','-':r'$\mathtt{-}$'}
             xs=[x+s for x in range(0,len(chunk_cigarstring))]

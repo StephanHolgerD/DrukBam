@@ -31,8 +31,8 @@ class CalcPlot():
         else:
             config.read(os.path.join(os.path.dirname(__file__),'classic.ini'))
         self.clipped=clipped
-        print(self.clipped)
         colorDict={}
+
         for a in config['nucleotide color']:
             colorDict[a.upper()]=config['nucleotide color'][a]
             colorDict[a.lower()]=config['nucleotide color'][a]
@@ -47,6 +47,8 @@ class CalcPlot():
         colorDict['OutlineAlpha']=float(config['outline']['alpha'])
         colorDict['OutlineBackground']=config['outline']['background']
         colorDict['OutlineColor']=config['outline']['outline']
+
+        colorDict['xticks']=config['Figure']['tickspacing']
 
         self.colorDict=colorDict
         plt.style.use(self.colorDict['pltstyle'])
@@ -138,7 +140,7 @@ class CalcPlot():
                 y=((y_perN*self.maxHeight)/self.cols)*2
             fig,ax=plt.subplots(2,self.cols,figsize=(x,y))
 
-        plt.suptitle('chromosome {} from {} to {}'.format(str(self.chrom),str(self.start),str(self.end)))
+        plt.suptitle('{} {}-{}'.format(str(self.chrom),str("{:,}".format(self.start)),str("{:,}".format(self.end))))
         self.ax=ax
         self.fig=fig
         plt.subplots_adjust(wspace=0,hspace=0.05, )
@@ -164,37 +166,71 @@ class CalcPlot():
 
 
 
+
+
+    def Xspacing(self,start,end,size=100,vcfPos=False):
+        if int(end-start)<size:
+            if not type(vcfPos)==int:
+                return [start,end]
+            else:
+                return [start,vcfPos,end]
+
+        digitDict={100:2,1000:3,10:1,10_000:4}
+        diffStart=size-int(str(start)[-1*digitDict[size]:])
+        rangeStart=start+diffStart
+        diffEnd=int(str(end)[-1*digitDict[size]:])
+        rangeEnd=end-diffEnd
+        x=size
+        if rangeEnd==end:
+            x=0
+        sizeChunks=list(range(rangeStart,rangeEnd+x,size))
+        chunks=[start]+sizeChunks+[end]
+        if type(vcfPos)==int:
+            print('here')
+            chunks=chunks+[vcfPos]
+            chunks.sort()
+        return chunks
+
+
+
     def AxSet(self,ax,start,end,chunk=False,direction='all',vcf=False):
 
         ylabel=direction
         if not chunk:
+            xlim=self.Xspacing(start,end,size=int(self.colorDict['xticks']))
             ax.set(xlim=(start,end),ylim=(0,self.maxHeight+2),ylabel=ylabel)
             ax.yaxis.set_ticks_position('left')
 
             if vcf:
-                ax.set_xticks([start,start+(end-start)/2,end],)
-                ax.set_xticklabels([str("{:,}".format(start)),'vcf position',str("{:,}".format(end))], rotation=40, ha='right')
+                xlim=self.Xspacing(start,end,size=int(self.colorDict['xticks']),vcfPos=int(start+(end-start)/2))
+                ax.set_xticks(xlim)
+                xlimStr=[str("{:,}".format(x)) for x in xlim]
+                ax.set_xticklabels(xlimStr, rotation=40, ha='right')
             else:
-                ax.set_xticks([start,end],)
-                ax.set_xticklabels([str("{:,}".format(start)),str("{:,}".format(end))], rotation=40, ha='right')
+                xlim=self.Xspacing(start,end,size=int(self.colorDict['xticks']))
+                ax.set_xticks(xlim)
+                xlimStr=[str("{:,}".format(x)) for x in xlim]
+                ax.set_xticklabels(xlimStr, rotation=40, ha='right')
 
         else:
             ax.xaxis.set_tick_params(length=1)
             ax.get_yaxis().set_visible(False)
+            xlim=self.Xspacing(start,start+self.chunksize,size=int(self.colorDict['xticks']))
+            xlimStr=[str("{:,}".format(x)) for x in xlim]
             ax.set(xlim=(start,start+self.chunksize),ylim=(0,self.maxHeight+2))
             ax.yaxis.set_ticks_position('none')
             ax.xaxis.set_ticks_position('bottom')
             if start==self.start:
                 ax.set(ylabel=ylabel)
                 ax.get_yaxis().set_visible(True)
-                ax.set_xticks([start])
-                ax.set_xticklabels([str("{:,}".format(start))], rotation=40, ha='right')
+                ax.set_xticks(xlim[:-1])
+                ax.set_xticklabels(xlimStr[:-1], rotation=40, ha='right')
             if end==self.end:
-                ax.set_xticks([start,start+self.chunksize])
-                ax.set_xticklabels(['',str("{:,}".format(end))], rotation=40, ha='right')
+                ax.set_xticks(xlim[1:])
+                ax.set_xticklabels(xlimStr[1:], rotation=40, ha='right')
             if  start!=self.start and end!=self.end:
-                ax.set_xticks([start])
-                ax.set_xticklabels([''], rotation=40, ha='right')
+                ax.set_xticks(xlim[1:-1])
+                ax.set_xticklabels(xlimStr[1:-1], rotation=40, ha='right')
 
 
         ax.spines['right'].set_visible(False)

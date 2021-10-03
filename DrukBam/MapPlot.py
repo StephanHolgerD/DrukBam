@@ -20,7 +20,6 @@ class PlotMapping():
         self.flag=flag
         self.Flag=Flag
         self.clipped=clipped
-        print(self.clipped)
         self.chunksize=chunksize
         self.direction=direction
         if direction:

@@ -49,6 +49,7 @@ class CalcPlot():
         colorDict['OutlineColor']=config['outline']['outline']
 
         colorDict['xticks']=config['Figure']['tickspacing']
+        
 
         self.colorDict=colorDict
         plt.style.use(self.colorDict['pltstyle'])
@@ -175,7 +176,7 @@ class CalcPlot():
             else:
                 return [start,vcfPos,end]
 
-        digitDict={100:2,1000:3,10:1,10_000:4}
+        digitDict={10:1,100:2,1000:3,10:1,10_000:4}
         diffStart=size-int(str(start)[-1*digitDict[size]:])
         rangeStart=start+diffStart
         diffEnd=int(str(end)[-1*digitDict[size]:])

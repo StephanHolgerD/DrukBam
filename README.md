@@ -4,18 +4,27 @@
 DrukBam  can be used with or without a reference fasta file and allows fast plotting multiple variants or regions of interest. Please provide feedback like bugs or options you might miss, I wrote this programm because I did not found a convicning tool to provide fast plotting of alignemnts withput using a GUI like in IGV or Tablet.
 
 ## reference free
-<center><img src="exampleOutput/example_refFreeDirection_19_281367_281468.png" width="100%"/></center>
+<center><img src="exampleOutput/example_out_small_19_281367_281466classic.png" width="100%"/></center>
 
 ## including a reference
-<center><img src="exampleOutput/example_refFreeDirection_19_281367_281468R.png" width="100%"/></center>
+<center><img src="exampleOutput/example_out_small_19_281367_281466Rclassic.png" width="100%"/></center>
 
-## split by read direction
-<center><img src="exampleOutput/example_refFreeDirection_19_281367_281568D.png" width="100%"/></center>
+## split reads by strand
+<center><img src="exampleOutput/example_out_small_19_281367_281466DRclassic.png" width="100%"/></center>
 
 
 ## bigger span
-<center><img src="exampleOutput/example_refFreeDirection_19_281067_282568DR.png" width="100%"/></center>
+<center><img src="exampleOutput/example_out_small_19_281060_281666DRclassic.png" width="100%"/></center>
 
+
+## changing plt style to dark or bmh
+<center><img src="exampleOutput/example_out_small_19_281060_281666Ddark_bg.png" width="100%"/></center>
+
+<center><img src="exampleOutput/example_out_small_19_281060_281666Dbmh.png" width="100%"/></center>
+
+
+## highlight soft/hard clipped reads by threshold
+<center><img src="exampleOutput/example_out_small_19_281060_281666Rclipped.png" width="100%"/></center>
 
 
 # Installing
@@ -54,10 +63,10 @@ pip install drukbam
 or via conda
 
 ```
- conda install -c stephanholgerd drukbam 
- 
+ conda install -c stephanholgerd drukbam
+
  ```
- 
+
 a docker image will follow
 
 
@@ -209,13 +218,6 @@ The arguments used above are:
 * pltstyle can be changed  [style list](https://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html)
 
 ---
- 
-### dark background
-<center><img src="exampleOutput/example_darkBG.png" width="100%"/></center>
 
----
-
-### seaborn
-<center><img src="exampleOutput/example_Seaborn.png" width="100%"/></center>
 
 ```

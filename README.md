@@ -67,7 +67,22 @@ or via conda
 
  ```
 
-a docker image will follow
+docker image
+
+```
+docker pull stephanholgerdrukewitz/drukbam:1.1.2
+
+```
+
+
+docker usage
+
+
+```
+
+docker  run -it --rm -v $PWD:/data drukbam:1.1.2 DrukBam region  -s 281367 -e 281468   -c 19 -b /data/test_data/test_small.bam  --outfmt png  -i example_out_small --maxcoverage 60 --outlineoff
+
+```
 
 
 # Usage

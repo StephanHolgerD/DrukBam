@@ -23,8 +23,8 @@ DrukBam  can be used with or without a reference fasta file and allows fast plot
 <center><img src="exampleOutput/example_out_small_19_281060_281666Dbmh.png" width="100%"/></center>
 
 
-## highlight soft/hard clipped reads by threshold
-<center><img src="exampleOutput/example_out_small_19_281060_281666Rclipped.png" width="100%"/></center>
+## highlight soft/hard clipped reads by threshold --> visualize insertion points
+<center><img src="exampleOutput/BigInsertion_13_32911500_32912000DR.pdf" width="100%"/></center>
 
 
 # Installing

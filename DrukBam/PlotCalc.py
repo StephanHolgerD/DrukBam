@@ -285,14 +285,17 @@ class CalcPlot():
                 ax.plot((s,e),(self.maxHeight+1,self.maxHeight+1),color=self.colorDict['max coverage'],alpha=0.1)
                 continue
 
-            chunk_cigarstring=self.CigChunker(cig)
+            chunk_cigarstring_orig=self.CigChunker(cig)
             query_alignment_sequence=qS
-            chunkL=len(chunk_cigarstring)
-            chunk_cigarstringS=[x for x in chunk_cigarstring if x =='S' or x =='H']
-            chunk_cigarstring=[x for x in chunk_cigarstring if x !='S' and x !='H']
+            chunkL=len(chunk_cigarstring_orig)
+            chunk_cigarstringS=[x for x in chunk_cigarstring_orig if x =='S' or x =='H']
+            chunk_cigarstring=[x for x in chunk_cigarstring_orig if x !='S' and x !='H'  and x!='D']
 
             ipos=[x for x,y in enumerate(chunk_cigarstring) if y=='I']
             ipos=self.listConsec(ipos)
+            
+            chunk_cigarstring=[x for x in chunk_cigarstring_orig if x !='S' and x !='H']
+            
             chunk_cigarstring=[x for x in chunk_cigarstring if x !='I']
             iposCounter=0
 

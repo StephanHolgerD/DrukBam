@@ -187,7 +187,6 @@ class CalcPlot():
         sizeChunks=list(range(rangeStart,rangeEnd+x,size))
         chunks=[start]+sizeChunks+[end]
         if type(vcfPos)==int:
-            print('here')
             chunks=chunks+[vcfPos]
             chunks.sort()
         return chunks

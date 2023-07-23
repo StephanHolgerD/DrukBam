@@ -36,19 +36,6 @@ DrukBam  can be used with or without a reference fasta file and allows fast plot
 * matplotlib
 * tqdm
 
-install via pip:
-```
-pip install pysam==0.16.0.1 pandas matplotlib tqdm
-
-```
-
-or via conda:
-```
-conda install -c conda-forge -c anaconda -c bioconda  matplotlib pandas tqdm pysam pip
-
-```
-
-If you create an virt. enviroment for DrukBam make sure to install pip in this env, otherwise you global pip will be used and DrukBam will be installed in the base env
 
 
 ## installation
@@ -56,21 +43,14 @@ If you create an virt. enviroment for DrukBam make sure to install pip in this e
 `DrukBam` is available  via pypi:
 
 ```
-pip install drukbam
+pip install drukbam==1.1.4
 
 ```
-
-or via conda
-
-```
- conda install -c stephanholgerd drukbam
-
- ```
 
 docker image
 
 ```
-docker pull stephanholgerdrukewitz/drukbam:1.1.2
+docker pull stephanholgerdrukewitz/drukbam:1.1.4
 
 ```
 
@@ -80,10 +60,12 @@ docker usage
 
 ```
 
-docker  run -it --rm -v $PWD:/data drukbam:1.1.2 DrukBam region  -s 281367 -e 281468   -c 19 -b /data/test_data/test_small.bam  --outfmt png  -i example_out_small --maxcoverage 60 --outlineoff
+docker  run -it --rm -v $PWD:/data drukbam:1.1.4 DrukBam region  -s 281367 -e 281468   -c 19 -b /data/test_data/test_small.bam  --outfmt png  -i example_out_small --maxcoverage 60 --outlineoff
 
 ```
 
+
+<span style="color:red">*a bug in cigar string parsing is fixed in DrukBam 1.1.4, versions <1.1.4 are deprecated and should not be used anymore* text</span>.
 
 # Usage
 <details>

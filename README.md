@@ -64,9 +64,9 @@ docker  run -it --rm -v $PWD:/data drukbam:1.1.4 DrukBam region  -s 281367 -e 28
 
 ```
 
-
-:heavy_exclamation_mark: bug in cigar string parsing is fixed in DrukBam 1.1.4, versions <1.1.4 are deprecated and should not be used anymore
-
+****
+:heavy_exclamation_mark: :heavy_exclamation_mark: bug in cigar string parsing is fixed in DrukBam 1.1.4, versions <1.1.4 are deprecated and should not be used anymore :heavy_exclamation_mark: :heavy_exclamation_mark:
+****
 # Usage
 <details>
   <summary>DrukBam vcf</summary>

@@ -65,7 +65,7 @@ docker  run -it --rm -v $PWD:/data drukbam:1.1.4 DrukBam region  -s 281367 -e 28
 ```
 
 
-<span style="color:red">*a bug in cigar string parsing is fixed in DrukBam 1.1.4, versions <1.1.4 are deprecated and should not be used anymore* text</span>.
+:heavy_exclamation_mark: bug in cigar string parsing is fixed in DrukBam 1.1.4, versions <1.1.4 are deprecated and should not be used anymore
 
 # Usage
 <details>
